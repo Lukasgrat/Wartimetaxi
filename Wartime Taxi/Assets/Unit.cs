@@ -3,6 +3,23 @@ using System.Collections.Generic;
 using UnityEditor.Rendering;
 using UnityEngine;
 
+enum UnitType
+{
+    Airbase,
+    Marine,
+    Destroyer,
+    Cruiser,
+    Submarine
+}
+
+
+enum Team
+{
+    Green,
+    Red,
+    Neutral
+}
+
 public class Unit : MonoBehaviour
 {
     [SerializeField]
@@ -11,19 +28,6 @@ public class Unit : MonoBehaviour
     UnitType type;
     [SerializeField]
     Team team;
-    enum UnitType
-    {
-        Artillery,
-        Marine,
-        Destroyer,
-        Cruiser,
-        Submarine
-    }
-    enum Team
-    { 
-        Green,
-        Red
-    }
     // Start is called before the first frame update
     void Start()
     {
@@ -35,7 +39,18 @@ public class Unit : MonoBehaviour
     {
         
     }
-    public override string ToString() {
+
+    public override string ToString()
+    {
         return this.type.ToString();
+    }
+    public void moveTo(Tile tile) 
+    {
+        this.location = tile; 
+    }
+
+    public bool canMoveToLand() 
+    { 
+        return this.type == UnitType.Marine || this.type == UnitType.Airbase;
     }
 }

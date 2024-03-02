@@ -1,3 +1,4 @@
+using Palmmedia.ReportGenerator.Core.Reporting.Builders;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ public class Tile : MonoBehaviour
     List<Unit> units;
     public bool isLand;
     GameObject litTile;
+    Team team = Team.Neutral;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -46,7 +49,6 @@ public class Tile : MonoBehaviour
             tile.lightTile(shouldLight);
         }
     }
-
     //EFFECT: Adds the given unit to one of the locations
     public void addUnit(Unit unit) {
         if (this.units.Count + 1 > this.unitPositions.Count) 
@@ -66,11 +68,22 @@ public class Tile : MonoBehaviour
         if (this.units.Contains(unit))
         {
             this.units.Remove(unit);
+            unit.moveTo(null);
             for (int x = 0; x < this.units.Count; x += 1)
             {
                 this.units[x].gameObject.transform.position = this.unitPositions[x];
             }
         }
 
+    }
+
+    //Returns whether the given unit can move onto this tile
+    public bool canMove(Unit unit, Tile nextTile)
+    {
+        if (nextTile.isLand && !unit.canMoveToLand()) 
+        {
+            return false;
+        }
+        return this.adjacentTiles.Contains(nextTile);
     }
 }

@@ -5,6 +5,10 @@ using UnityEngine;
 public class InputHandler : MonoBehaviour
 {
     Camera cam;
+    int turn = 0;
+    [SerializeField]
+    List<Tile> tiles;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,8 +27,22 @@ public class InputHandler : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100)) 
             {
-                Debug.Log(hit.transform.name);
+                if (hit.transform.gameObject.TryGetComponent<Tile>(out Tile t))
+                {
+                    Debug.Log("here");
+                }
             }
         }
+    }
+    void clearLights()
+    { 
+        foreach (Tile tile in tiles)
+        {
+            tile.lightTile(false);
+        }
+    }
+
+    void moveUnit() {
+    
     }
 }
