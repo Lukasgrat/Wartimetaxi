@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Rendering;
 using UnityEngine;
 
-enum UnitType
+public enum UnitType
 {
     Airbase,
     Marine,
@@ -13,7 +13,7 @@ enum UnitType
 }
 
 
-enum Team
+public enum Team
 {
     Green,
     Red,
