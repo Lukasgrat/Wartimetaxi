@@ -9,10 +9,10 @@ using UnityEngine.UIElements;
 public class Tile : MonoBehaviour
 {
     [SerializeField]
-    List<Tile> adjacentTiles;
+    List<Tile> adjacentTiles = new List<Tile>();
     [SerializeField]
-    List<Vector3> unitPositions;
-    List<Unit> units;
+    List<Vector3> unitPositions = new List<Vector3>();
+    List<Unit> units = new List<Unit>();
     public bool isLand;
     GameObject litTile;
     Team team = Team.Neutral;
@@ -56,7 +56,7 @@ public class Tile : MonoBehaviour
             throw new Exception("Error, tile" + this.name +" does not have enough positions to hold" 
                 + (units.Count + 1).ToString() + "units." );
         }
-        unit.gameObject.transform.position = this.unitPositions[this.units.Count];
+        unit.gameObject.transform.position = (this.unitPositions[this.units.Count])+ this.transform.position;
         this.units.Add(unit);
     
     }
@@ -85,5 +85,9 @@ public class Tile : MonoBehaviour
             return false;
         }
         return this.adjacentTiles.Contains(nextTile);
+    }
+
+    //Handles selecting this tile
+    public void select() {
     }
 }

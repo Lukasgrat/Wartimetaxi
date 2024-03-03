@@ -5,10 +5,12 @@ using UnityEngine;
 public class InputHandler : MonoBehaviour
 {
     Camera cam;
-    int turn = 0;
+    int turnNumber = 0;
+    Team currentPlayer = Team.Green;
     [SerializeField]
     List<Tile> tiles;
-
+    List<Card> cards;
+    List<Player> playerList;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,7 +31,7 @@ public class InputHandler : MonoBehaviour
             {
                 if (hit.transform.gameObject.TryGetComponent<Tile>(out Tile t))
                 {
-                    Debug.Log("here");
+                    this.SelectionHandler(t);
                 }
             }
         }
@@ -44,5 +46,26 @@ public class InputHandler : MonoBehaviour
 
     void moveUnit() {
     
+    }
+
+    void SelectionHandler(Tile t)
+    {
+        
+    }
+
+    void nextTurn() 
+    {
+        switch (this.currentPlayer) 
+        { 
+            case Team.Green:
+                this.currentPlayer = Team.Red; 
+                break;
+            case Team.Red: 
+                this.currentPlayer = Team.Green;
+                turnNumber += 1;
+                break;
+            default:
+                throw new System.Exception("Error, invalid state for current team reached");
+        }
     }
 }
