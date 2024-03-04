@@ -119,7 +119,7 @@ public class InputHandler : MonoBehaviour
         {
 
             this.currentState = State.SelectedTile1Move;
-            t.activateUnits(this.selectionHandler);
+            t.activateMoveableUnits(this.selectionHandler);
             this.initiatedTile = t;
             this.clearLights();
         }
@@ -132,7 +132,7 @@ public class InputHandler : MonoBehaviour
         }
         else if (t.isLighten() && this.currentState == State.SelectedShoot) {
             this.currentState = State.SelectedTile1Shoot;
-            t.activateUnits(this.selectionHandler);
+            t.activateShootableUnits(this.selectionHandler);
             this.initiatedTile = t;
             this.clearLights();
         }
@@ -221,7 +221,11 @@ public class InputHandler : MonoBehaviour
     {
         this.resetState();
         this.selectedCard = CardType.Move;
-        this.playerList[currentPlayerIndex].hightLightUnitTiles();
+        List<Tile> hightLightList = this.playerList[currentPlayerIndex].canMoveFrom();
+        foreach (Tile t in hightLightList)
+        {
+            t.lightTile(true);
+        }
         this.currentState = State.SelectedMove;
     }
     public void startShoot()

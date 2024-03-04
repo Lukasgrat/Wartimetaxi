@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 
@@ -102,6 +104,10 @@ public class Unit : MonoBehaviour
         return t.inRange(n, this.location);
     }
 
+    public bool canMoveOff() 
+    {
+        return this.location.canMoveOffOf(this);
+    }
 
     //Returns whether this piece is vunerable to that type of piece
 
@@ -140,13 +146,25 @@ public class Unit : MonoBehaviour
     public bool survivedShot() 
     {
         this.health -= 1;
-        Debug.Log(this.health);
         return this.health > 0;
     }
 
-    //Removes u from its given locaiton
+    //Removes u from its given locaton
     public void removeLocation() 
     { 
         this.location.removeUnit(this);
+    }
+
+    //EFFECT: Returns if this unit can off of the given tile to any of the other tiles
+    public bool canMoveOffOf(Tile tile, List<Tile> adjacentTiles)
+    {
+        foreach (Tile t in adjacentTiles)
+        {
+            if (t.canMove(this, tile))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

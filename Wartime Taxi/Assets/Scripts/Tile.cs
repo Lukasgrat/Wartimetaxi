@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEngine.UI.CanvasScaler;
 
 public class Tile : MonoBehaviour
 {
@@ -92,9 +93,10 @@ public class Tile : MonoBehaviour
     //EFFECT:Lights all tiles that the given unit can move to, assuming they are on this tile
     public void lightMoveable(Unit unit)
     {
+        
         foreach (Tile t in this.adjacentTiles)
         {
-            if (t.canMove(unit, this))
+            if (!unit.opposingTeam(t.team) && t.canMove(unit, this))
             {
                 t.lightTile(true);
             }
@@ -106,7 +108,6 @@ public class Tile : MonoBehaviour
     {
         foreach (Tile t in this.adjacentTiles) 
         {
-            Debug.Log(t.isVunerable(unit));
             if (unit.opposingTeam(t.team) && t.isVunerable(unit)) 
             {
                 t.lightTile(true);
@@ -143,6 +144,65 @@ public class Tile : MonoBehaviour
     public void activateUnits(SelectionHandler handler) 
     {
         handler.enableButtons(this.units);
+    }
+
+    //Returns all moveable units from this tile
+    public List<Unit> moveableUnits() 
+    { 
+        List<Unit> moveableUnits = new List<Unit>();
+        foreach (Unit u in this.units) 
+        {
+            if (u.canMoveOffOf(this, this.adjacentTiles)) 
+            { 
+                moveableUnits.Add(u);
+            }
+        }
+        return moveableUnits;
+    }
+    //EFFECT: Given a Selection handler, highlights all unit buttons that can be used
+    public void activateMoveableUnits(SelectionHandler handler) 
+    { 
+        handler.enableButtons(this.moveableUnits());
+        
+    }
+
+    //Rturns all units that can shoot form this tile
+    public List<Unit> shootableUnits() 
+    {
+        List<Unit> shootableUnits = new List<Unit>();
+        foreach (Tile t in this.adjacentTiles)
+        { 
+            bool tileAdded = false;
+            foreach (Unit u in this.units) 
+            {
+                if (!tileAdded && u.opposingTeam(t.team) && t.isVunerable(u)) 
+                {
+                    shootableUnits.Add(u);
+                    tileAdded = true;
+                }
+            }
+        }
+        return shootableUnits;
+    }
+
+    //EFFECT: Given a Selection handler, highlights all unit buttons that can be used
+    public void activateShootableUnits(SelectionHandler handler)
+    {
+        handler.enableButtons(this.shootableUnits());
+
+    }
+
+    //EFFECT: Given a unit, returns if this unit can move to any other tile adjacent to this one
+    public bool canMoveOffOf(Unit u) 
+    {
+        foreach (Tile t in this.adjacentTiles)
+        {
+            if (t.canMove(u, this))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     //EFFECT: Given a Selectionhandler and the firing unit,

@@ -78,14 +78,20 @@ public class Player
         }
     }
 
-    //EFFECT: highlights the tiles that contain these units
-    public void hightLightUnitTiles()
+    //Returns the list of tiles of this player where units can shoot the given units
+    public List<Tile> canMoveFrom()
     {
-        foreach (Unit unit in this.units)
+        List<Tile> returnTiles = new List<Tile>();
+        foreach (Unit u in units)
         {
-            unit.hightLightTile();
+            if (u.canMoveOff()) 
+            {
+                u.addLocationTo(returnTiles);
+            }
         }
+        return returnTiles;
     }
+
 
     //Returns the list of tiles of the attackers of this player be shot by the given player in any form
     public List<Tile> canBeShotBy(Player that)
