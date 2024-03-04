@@ -26,23 +26,30 @@ public class Card : MonoBehaviour
         this.inputHandler = inputHandler;
     }
 
-
+    public bool sameType(CardType type) 
+    { 
+        return this.cardType == type;
+    }
     // Start is called before the first frame update
     
     void Start()
     {
         this.gameObject.transform.GetChild(0).gameObject.GetComponent<Button>().onClick.AddListener(delegate { this.selectCard(); });
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     //activates this card
     void selectCard()
     {
-        this.inputHandler.startMove();
+        switch (this.cardType) 
+        {
+            case CardType.Move:
+                this.inputHandler.startMove();
+                break;
+            case CardType.Shoot:
+                this.inputHandler.startShoot();
+                break;
+            default:
+                throw new System.Exception("Error, card state " + this.cardType + "has not been accounted for.");
+        }
+
     }
 }

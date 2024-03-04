@@ -26,20 +26,26 @@ public class InputHandler : MonoBehaviour
     GameObject units;
     [SerializeField]
     SelectionHandler selectionHandler;
-    CardType selectedCard;
+    CardType selectedCard = CardType.None;
 
 
     Unit initiator;
+    Tile initiatedTile;
     Tile target;
     Unit unitTarget;
 
     enum State 
     { 
         Idle,
+
         SelectedMove,
         SelectedTile1Move,
         SelectedUnit1Move,
-        SelectedTile2Move,
+
+        SelectedShoot,
+        SelectedTile1Shoot,
+        SelectedUnit1Shoot,
+        SelectedTile2Shoot,
         
     }
     State currentState;
@@ -111,14 +117,73 @@ public class InputHandler : MonoBehaviour
     {
         if (t.isLighten() && this.currentState == State.SelectedMove)
         {
+
             this.currentState = State.SelectedTile1Move;
             t.activateUnits(this.selectionHandler);
-        }
-        else 
-        {
-            this.currentState = State.Idle;
-            this.selectedCard = CardType.None;
+            this.initiatedTile = t;
             this.clearLights();
+        }
+        else if (t.isLighten() && this.currentState == State.SelectedUnit1Move)
+        {
+            Order order = new Move(this.initiatedTile, t, this.initiator);
+            order.playCard();
+            this.playerList[this.currentPlayerIndex].removeCard(this.selectedCard);
+            this.resetState();
+        }
+        else if (t.isLighten() && this.currentState == State.SelectedShoot) {
+            this.currentState = State.SelectedTile1Shoot;
+            t.activateUnits(this.selectionHandler);
+            this.initiatedTile = t;
+            this.clearLights();
+        }
+        else if (t.isLighten() && this.currentState == State.SelectedUnit1Shoot)
+        {
+            this.target = t;
+            this.currentState = State.SelectedTile2Shoot;
+            t.activateVunerableUnits(this.selectionHandler, initiator);
+            this.initiatedTile = t;
+            this.clearLights();
+        }
+        else
+        {
+            resetState();
+        }
+    }
+
+    //EFFECT: Resets the built up state from a move
+    public void resetState()
+    {
+        this.currentState = State.Idle;
+        this.selectedCard = CardType.None;
+        this.clearLights();
+    }
+
+    public void unitSelected(UnitType ut) 
+    {
+        if (this.currentState == State.SelectedTile1Move)
+        {
+            this.initiator = this.initiatedTile.returnUnit(ut);
+            this.clearLights();
+            this.initiatedTile.lightMoveable(this.initiator);
+            this.selectionHandler.disableButtons();
+            this.currentState = State.SelectedUnit1Move;
+
+        }
+        else if (this.currentState == State.SelectedTile1Shoot)
+        {
+            this.initiator = this.initiatedTile.returnUnit(ut);
+            this.clearLights();
+            this.initiatedTile.lightShootable(this.initiator);
+            this.selectionHandler.disableButtons();
+            this.currentState = State.SelectedUnit1Shoot;
+        }
+        else if(this.currentState == State.SelectedTile2Shoot)
+        {
+            Order order = new Shoot(this.initiator, this.initiatedTile.returnUnit(ut), this.opposingPlayer());
+            order.playCard();
+            this.playerList[this.currentPlayerIndex].removeCard(this.selectedCard);
+            this.selectionHandler.disableButtons();
+            this.resetState();
         }
     }
 
@@ -143,11 +208,31 @@ public class InputHandler : MonoBehaviour
                 throw new System.Exception("Error, invalid state for current team reached");
         }
     }
+
+    //returns the player whose turn its not
+    public Player opposingPlayer() {
+        if (currentPlayerIndex == 0) {
+            return this.playerList[1];
+        }
+        return this.playerList[0];
+    }
+
     public void startMove() 
     {
+        this.resetState();
         this.selectedCard = CardType.Move;
-        this.clearLights();
         this.playerList[currentPlayerIndex].hightLightUnitTiles();
         this.currentState = State.SelectedMove;
+    }
+    public void startShoot()
+    {
+        this.resetState();
+        this.selectedCard = CardType.Shoot;
+        this.currentState = State.SelectedShoot;
+        List<Tile> hightLightList = this.opposingPlayer().canBeShotBy(this.playerList[currentPlayerIndex]);
+        foreach (Tile t in hightLightList) 
+        {
+            t.lightTile(true);
+        }
     }
 }

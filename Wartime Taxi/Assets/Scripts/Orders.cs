@@ -4,34 +4,68 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-interface Orders
+interface Order
 {
-    bool isValid(Unit unit);
-    void playCard(Unit unit);
+    bool isValid();
+    void playCard();
 
-    int value(Unit unit);
+    int value();
 }
 
-class Move : Orders {
+class Move : Order {
     Tile currentTile;
     Tile nextTile;
-    public Move(Tile currentTile, Tile nextTile) 
+    Unit unit;
+    public Move(Tile currentTile, Tile nextTile, Unit unit) 
     {
         this.currentTile = currentTile;
         this.nextTile = nextTile;
+        this.unit = unit; 
     }
-    public bool isValid(Unit unit) 
+    public bool isValid() 
     {
-        return this.currentTile.canMove(unit, this.nextTile);
+        return this.currentTile.canMove(this.unit, this.nextTile);
     }
-    public void playCard(Unit unit) 
+    public void playCard() 
     {
-        this.currentTile.removeUnit(unit);
-        this.nextTile.addUnit(unit);
+        this.currentTile.removeUnit(this.unit);
+        this.nextTile.addUnit(this.unit);
     }
 
-    public int value(Unit unit)
+    public int value()
     {
         return 0;
     }
 }
+
+class Shoot : Order 
+{
+    Unit shooter;
+    Unit target;
+    Player targetedPlayer;
+    public Shoot(Unit shooter, Unit target, Player targetedPlayer) 
+    { 
+        this.shooter = shooter;
+        this.target = target;
+        this.targetedPlayer = targetedPlayer;
+    }
+
+    public bool isValid()
+    {
+        return shooter.canShoot(this.target);
+    }
+
+    public void playCard()
+    {
+        if (!target.survivedShot()) 
+        {
+           targetedPlayer.destroyUnit(this.target);
+        }
+    }
+
+    public int value()
+    {
+        return 0;
+    }
+}
+
