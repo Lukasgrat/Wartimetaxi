@@ -16,13 +16,14 @@ public class Tile : MonoBehaviour
     public bool isLand;
     GameObject litTile;
     Team team = Team.Neutral;
-    
+    bool isLit = false;
+
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i < transform.childCount; i += 1) {
+        for (int i = 0; i < transform.childCount; i += 1) {
             if (transform.GetChild(i).name.Equals("Light"))
-            { 
+            {
                 litTile = transform.GetChild(i).gameObject;
             }
         }
@@ -35,10 +36,17 @@ public class Tile : MonoBehaviour
     }
 
 
+    //Returns whether this tile is lit or not
+    public bool isLighten() 
+    {
+        return this.isLit;
+    }
+
     //EFFECT: given whether it should light the tile or not, does so
     public void lightTile(bool shouldLight)
     {
         this.litTile.SetActive(shouldLight);
+        this.isLit = shouldLight;
     }
 
     //EFFECT: Lights all adjacent tiles to this tile
@@ -87,7 +95,9 @@ public class Tile : MonoBehaviour
         return this.adjacentTiles.Contains(nextTile);
     }
 
-    //Handles selecting this tile
-    public void select() {
+    //EFFECT: Given a Selectionhandler, activites all buttons of the units that are on this tile
+    public void activateUnits(SelectionHandler handler) 
+    {
+        handler.enableButtons(this.units);
     }
 }

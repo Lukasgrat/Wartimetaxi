@@ -27,7 +27,7 @@ public class Unit : MonoBehaviour
     [SerializeField]
     UnitType type;
     [SerializeField]
-    Team team;
+    public Team team;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +38,11 @@ public class Unit : MonoBehaviour
     void Update()
     {
         
+    }
+    //returns whether this unit has the same type as the given type
+    public bool sameType(UnitType type) 
+    {
+        return this.type == type;
     }
 
     public override string ToString()
@@ -52,5 +57,11 @@ public class Unit : MonoBehaviour
     public bool canMoveToLand() 
     { 
         return this.type == UnitType.Marine || this.type == UnitType.Airbase;
+    }
+
+    //EFFECT: Highlights the tile associated  with this unit
+    public void hightLightTile() 
+    {
+        this.location.lightTile(true);
     }
 }

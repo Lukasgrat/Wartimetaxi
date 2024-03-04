@@ -13,14 +13,6 @@ public class Player
     [SerializeField]
     CardGenerator generator;
 
-    Player(Team team, List<Unit> units, List<Card> deck, CardGenerator generator)
-    {
-        this.units = units;
-        this.team = team;
-        this.deck = deck;
-        this.startingPoint = new Vector3(0,0,0);
-        this.generator = generator;
-    }
     public Player(Team team, Vector3 startingPoint, CardGenerator generator)
     {
         this.team = team;
@@ -43,6 +35,14 @@ public class Player
     { 
         return this.deck.Count < maxCards;
     }
+    public void addUnit(Unit u)
+    {
+        if (u.team != this.team) 
+        {
+            throw new System.Exception("Team mismatch for player and added unit");
+        }
+        this.units.Add(u);
+    }
 
     //Draws a card given its parent
     public void drawCard(GameObject parent) 
@@ -51,5 +51,14 @@ public class Player
         this.deck.Add(Object.Instantiate(gameObject, 
             new Vector3((this.deck.Count * 80) + 500, 0, 0)
             , new Quaternion(), parent.transform));
+    }
+
+    //EFFECT: highlights the tiles that contain these units
+    public void hightLightUnitTiles() 
+    {
+        foreach (Unit unit in this.units) 
+        {
+            unit.hightLightTile();
+        }
     }
 }

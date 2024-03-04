@@ -8,15 +8,22 @@ public enum CardType
 { 
     Move,
     Split,
-    Shoot
+    Shoot,
+    None
 }
 public class Card : MonoBehaviour
 {
     [SerializeField]
     CardType cardType;
-    public Card(CardType cardType)
+    public InputHandler inputHandler;
+    public Card(CardType cardType, InputHandler inputHandler)
     {
         this.cardType = cardType;
+    }
+
+    public void setInputHandler(InputHandler inputHandler)
+    {
+        this.inputHandler = inputHandler;
     }
 
 
@@ -24,7 +31,7 @@ public class Card : MonoBehaviour
     
     void Start()
     {
-        this.gameObject.transform.GetChild(0).gameObject.GetComponent<Button>().onClick.AddListener(this.selectCard);
+        this.gameObject.transform.GetChild(0).gameObject.GetComponent<Button>().onClick.AddListener(delegate { this.selectCard(); });
     }
 
     // Update is called once per frame
@@ -35,16 +42,7 @@ public class Card : MonoBehaviour
 
     //activates this card
     void selectCard()
-    { 
-     
-    }
-
-    //EFFECT: sets the type of the card when its null
-    void startingType(CardType type) 
     {
-        if (this.cardType == null) 
-        {
-            
-        }
+        this.inputHandler.startMove();
     }
 }

@@ -13,7 +13,6 @@ public class InputHandler : MonoBehaviour
     [SerializeField]
     List<Tile> tiles;
     List<Player> playerList;
-
     [SerializeField]
     int MAXCARDCOUNT = 6;
     [SerializeField]
@@ -23,15 +22,50 @@ public class InputHandler : MonoBehaviour
     GameObject cards;
     [SerializeField]
     CardGenerator cardGenerator;
+    [SerializeField]
+    GameObject units;
+    [SerializeField]
+    SelectionHandler selectionHandler;
+    CardType selectedCard;
+
+
+    Unit initiator;
+    Tile target;
+    Unit unitTarget;
+
+    enum State 
+    { 
+        Idle,
+        SelectedMove,
+        SelectedTile1Move,
+        SelectedUnit1Move,
+        SelectedTile2Move,
+        
+    }
+    State currentState;
     // Start is called before the first frame update
     void Start()
     {
         this.cam = Camera.main;
         playerList = new List<Player>();
+        STARTINGDRAW = cards.transform.position;
         playerList.Add(new Player(Team.Green, STARTINGDRAW, cardGenerator));
         playerList.Add(new Player(Team.Red, STARTINGDRAW, cardGenerator));
+        for (int x = 0; x < units.transform.childCount; x++)
+        {
+            if (units.transform.GetChild(x).TryGetComponent<Unit>(out Unit u))
+            {
+                if (u.team == Team.Green)
+                {
+                    this.playerList[0].addUnit(u);
+                }
+                else if(u.team == Team.Red) 
+                {
+                    this.playerList[1].addUnit(u);
+                }
+            }
+        }
         this.drawCardButton.onClick.AddListener(drawCard);
-        STARTINGDRAW = cards.transform.position;
     }
 
     // Update is called once per frame
@@ -75,7 +109,17 @@ public class InputHandler : MonoBehaviour
 
     void SelectionHandler(Tile t)
     {
-        
+        if (t.isLighten() && this.currentState == State.SelectedMove)
+        {
+            this.currentState = State.SelectedTile1Move;
+            t.activateUnits(this.selectionHandler);
+        }
+        else 
+        {
+            this.currentState = State.Idle;
+            this.selectedCard = CardType.None;
+            this.clearLights();
+        }
     }
 
     void nextTurn() 
@@ -98,5 +142,12 @@ public class InputHandler : MonoBehaviour
             default:
                 throw new System.Exception("Error, invalid state for current team reached");
         }
+    }
+    public void startMove() 
+    {
+        this.selectedCard = CardType.Move;
+        this.clearLights();
+        this.playerList[currentPlayerIndex].hightLightUnitTiles();
+        this.currentState = State.SelectedMove;
     }
 }

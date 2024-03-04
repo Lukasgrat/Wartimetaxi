@@ -6,9 +6,12 @@ public class CardGenerator : MonoBehaviour
 {
 
     [SerializeField]
-    GameObject moveCard;
+    Card moveCard;
+    [SerializeField]
+    InputHandler inputHandler;
     public Card generateCard() 
     {
-        return moveCard.GetComponent<Card>();
+        moveCard.setInputHandler(this.inputHandler); 
+        return moveCard;
     }
 }
