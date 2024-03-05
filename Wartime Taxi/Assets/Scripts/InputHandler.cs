@@ -1,7 +1,9 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InputHandler : MonoBehaviour
@@ -33,6 +35,12 @@ public class InputHandler : MonoBehaviour
     Tile initiatedTile;
     Tile target;
     Unit unitTarget;
+    [SerializeField]
+    GameObject unitInfo;
+    [SerializeField]
+    TextMeshProUGUI unitInfoText;
+
+
 
     enum State 
     { 
@@ -80,11 +88,11 @@ public class InputHandler : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = 100;
         mousePos = cam.ScreenToWorldPoint(mousePos);
-        if(Input.GetMouseButtonDown(0)) 
+        if (Input.GetMouseButtonDown(0))
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100)) 
+            if (Physics.Raycast(ray, out hit, 100))
             {
                 if (hit.transform.gameObject.TryGetComponent<Tile>(out Tile t))
                 {
@@ -92,9 +100,41 @@ public class InputHandler : MonoBehaviour
                 }
             }
         }
+        else 
+        {
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            bool madeActive = false;
+            RaycastHit[] hits = Physics.RaycastAll(ray, 100f);
+            {
+                foreach (RaycastHit hit in hits)
+                {
+                    if (hit.transform.gameObject.TryGetComponent<Unit>(out Unit u))
+                    {
+                        this.unitInfoText.text = u.ToString();
+                        if (u.sameTeam(Team.Green))
+                        {
+                            this.unitInfoText.color = Color.green;
+                        }
+                        else if (u.sameTeam(Team.Red))
+                        {
+                            this.unitInfoText.color = Color.red;
+                        }
+                        else 
+                        {
+                            this.unitInfoText.color = Color.white;
+                        }
+                        madeActive = true;
+                        break;
+                    }
+
+                }
+            }
+            this.unitInfo.SetActive(madeActive);
+        }
     }
     void drawCard() 
     {
+        EventSystem.current.SetSelectedGameObject(null);
         Player player = this.playerList[this.currentPlayerIndex];
         if (player.canDrawCard(this.MAXCARDCOUNT)) 
         {
@@ -156,6 +196,7 @@ public class InputHandler : MonoBehaviour
         this.currentState = State.Idle;
         this.selectedCard = CardType.None;
         this.clearLights();
+        this.selectionHandler.disableButtons();
     }
 
     public void unitSelected(UnitType ut) 

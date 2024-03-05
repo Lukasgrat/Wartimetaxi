@@ -29,7 +29,7 @@ public class SelectionHandler : MonoBehaviour
         this.selectAirfield.onClick.AddListener(delegate { this.inputHandler.unitSelected(UnitType.Airbase); });
     }
 
-    //enables all buttons associated with the given units, clearing all others 
+     //enables all buttons associated with the given units, clearing all others 
     public void enableButtons(List<Unit> units) 
     {
         this.disableButtons();

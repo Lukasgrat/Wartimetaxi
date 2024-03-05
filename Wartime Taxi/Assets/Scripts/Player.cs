@@ -121,6 +121,6 @@ public class Player
     {
         this.units.Remove(u);
         u.removeLocation();
-        Object.Destroy(u);
+        Object.Destroy(u.gameObject);
     }
 }

@@ -49,6 +49,10 @@ public class Unit : MonoBehaviour
         return this.type == type;
     }
 
+    //returns whether this unit has the same team as the given team
+
+    public bool sameTeam(Team team) { return this.team == team; }
+
     //returns whether the given team is opposing to this unit
     public bool opposingTeam(Team team) 
     {
@@ -63,10 +67,6 @@ public class Unit : MonoBehaviour
         return false;
     }
 
-    public override string ToString()
-    {
-        return this.type.ToString();
-    }
     public void moveTo(Tile tile) 
     {
         this.location = tile; 
@@ -148,7 +148,10 @@ public class Unit : MonoBehaviour
         this.health -= 1;
         return this.health > 0;
     }
-
+    public String ToString() 
+    {
+        return this.team + " " + this.type + "\n Health: " + this.health; 
+    }
     //Removes u from its given locaton
     public void removeLocation() 
     { 
