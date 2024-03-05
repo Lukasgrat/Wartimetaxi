@@ -86,7 +86,7 @@ public class Player
         List<Tile> returnTiles = new List<Tile>();
         foreach (Unit u in units)
         {
-            if (u.canMoveOff()) 
+            if (u.canMoveOff())
             {
                 u.addLocationTo(returnTiles);
             }
@@ -102,14 +102,14 @@ public class Player
     }
 
     //Returns the list of tiles of this player where units can shoot the given units
-    public List<Tile> canShoot(List<Unit> units) 
+    public List<Tile> canShoot(List<Unit> units)
     {
         List<Tile> returnTiles = new List<Tile>();
-        foreach (Unit target in units) 
+        foreach (Unit target in units)
         {
-            foreach (Unit unit in this.units) 
+            foreach (Unit unit in this.units)
             {
-                if (unit.canShoot(target)) 
+                if (unit.canShoot(target))
                 {
                     unit.addLocationTo(returnTiles);
                 }
@@ -119,10 +119,24 @@ public class Player
     }
 
     //Removes the unit u from this player
-    public void destroyUnit(Unit u) 
+    public void destroyUnit(Unit u)
     {
         this.units.Remove(u);
         u.removeLocation();
         Object.Destroy(u.gameObject);
+    }
+
+    //returns all tiles vunerable to the give unit
+    public List<Tile> vunerableTiles(Unit u) 
+    {
+        List<Tile> tiles = new List<Tile>();
+       foreach (Unit unit in this.units) 
+        {
+            if (u.canShoot(unit)) 
+            {
+                unit.addLocationTo(tiles);
+            }
+        }
+        return tiles;
     }
 }

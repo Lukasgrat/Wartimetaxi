@@ -152,7 +152,10 @@ public class Unit : MonoBehaviour
     //EFFECT Adds the location of this unit to the given list
     public void addLocationTo(List<Tile> tiles) 
     {
+        if (!tiles.Contains(this.location)) 
+        { 
         tiles.Add(this.location);
+        }
     }
 
 

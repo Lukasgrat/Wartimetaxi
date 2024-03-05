@@ -114,6 +114,16 @@ public class Tile : MonoBehaviour
             {
                 t.lightTile(true);
             }
+            if (unit.sameType(UnitType.Airbase)) 
+            {
+                foreach (Tile t2 in t.adjacentTiles)
+                {
+                    if (unit.opposingTeam(t2.team) && t2.isVunerable(unit))
+                    {
+                        t2.lightTile(true);
+                    }
+                }
+            }
         }
     }
 
@@ -169,19 +179,27 @@ public class Tile : MonoBehaviour
         
     }
 
-    //Rturns all units that can shoot form this tile
+    //Returns all units that can shoot form this tile
     public List<Unit> shootableUnits() 
     {
         List<Unit> shootableUnits = new List<Unit>();
-        foreach (Tile t in this.adjacentTiles)
-        { 
-            bool tileAdded = false;
-            foreach (Unit u in this.units) 
-            {
-                if (!tileAdded && u.opposingTeam(t.team) && t.isVunerable(u)) 
+        foreach (Unit u in this.units)
+        {
+            foreach (Tile t in this.adjacentTiles)
+            { 
+                if (u.opposingTeam(t.team) && t.isVunerable(u) && !shootableUnits.Contains(u)) 
                 {
                     shootableUnits.Add(u);
-                    tileAdded = true;
+                }
+                if (u.sameType(UnitType.Airbase)) 
+                {
+                    foreach (Tile t2 in t.adjacentTiles) 
+                    {
+                        if (u.opposingTeam(t2.team) && t2.isVunerable(u) && !shootableUnits.Contains(u))
+                        {
+                            shootableUnits.Add(u);
+                        }
+                    }
                 }
             }
         }
