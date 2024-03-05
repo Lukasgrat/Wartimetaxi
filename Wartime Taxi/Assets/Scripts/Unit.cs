@@ -43,15 +43,29 @@ public class Unit : MonoBehaviour
         
     }
 
-   //returns whether this unit has the same type as the given type
-    public bool sameType(UnitType type) 
-    {
-        return this.type == type;
-    }
-
-    //returns whether this unit has the same team as the given team
+   //returns whether this unit has the same team as the given team
 
     public bool sameTeam(Team team) { return this.team == team; }
+
+
+    //returns if this unit is the given type
+    public bool sameType(UnitType type) 
+    { 
+        return this.type.Equals(type);
+    }
+
+    //EFFECT: Converts the unit from a Marine to an Airfield and vice versa
+    public void grade(bool isUp) 
+    {
+        if (isUp && this.type == UnitType.Marine) 
+        {
+            this.type = UnitType.Airbase;
+        }
+        else if (!isUp && this.type == UnitType.Airbase) 
+        { 
+            this.type = UnitType.Marine;
+        }
+    }
 
     //returns whether the given team is opposing to this unit
     public bool opposingTeam(Team team) 

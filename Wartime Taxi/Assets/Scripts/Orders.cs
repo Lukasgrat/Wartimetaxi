@@ -30,6 +30,14 @@ class Move : Order {
     {
         this.currentTile.removeUnit(this.unit);
         this.nextTile.addUnit(this.unit);
+        if (this.currentTile.isAirBase && !this.nextTile.isAirBase) 
+        {
+            this.unit.grade(false);
+        }
+        else if (!this.currentTile.isAirBase && this.nextTile.isAirBase)
+        {
+            this.unit.grade(true);
+        }
     }
 
     public int value()

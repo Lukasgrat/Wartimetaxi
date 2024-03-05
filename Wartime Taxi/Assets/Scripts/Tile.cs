@@ -15,6 +15,7 @@ public class Tile : MonoBehaviour
     List<Vector3> unitPositions = new List<Vector3>();
     List<Unit> units = new List<Unit>();
     public bool isLand;
+    public bool isAirBase;
     GameObject litTile;
     Team team = Team.Neutral;
     bool isLit = false;
@@ -67,6 +68,7 @@ public class Tile : MonoBehaviour
         }
         unit.gameObject.transform.position = (this.unitPositions[this.units.Count]) + this.transform.position;
         this.units.Add(unit);
+
         unit.moveTo(this);
         this.team = this.units[0].team;
     }

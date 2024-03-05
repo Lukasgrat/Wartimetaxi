@@ -49,8 +49,10 @@ public class Player
     {
         Card gameObject = generator.generateCard();
         this.deck.Add(Object.Instantiate(gameObject,
-            new Vector3((this.deck.Count * 80) + 500, 0, 0)
-            , new Quaternion(), parent.transform));
+            new Vector3((this.deck.Count * 110) + parent.transform.position.x,
+            parent.transform.position.y,
+            parent.transform.position.z),
+            new Quaternion(), parent.transform));
     }
 
     //EFFECT: Removes the first instance of the given type of card within this person's hand

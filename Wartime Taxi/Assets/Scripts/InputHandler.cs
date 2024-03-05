@@ -15,8 +15,8 @@ public class InputHandler : MonoBehaviour
     [SerializeField]
     List<Tile> tiles;
     List<Player> playerList;
-    [SerializeField]
     int MAXCARDCOUNT = 6;
+    int startingCardCount = 5;
     [SerializeField]
     Button drawCardButton;
     Vector3 STARTINGDRAW;
@@ -29,17 +29,26 @@ public class InputHandler : MonoBehaviour
     [SerializeField]
     SelectionHandler selectionHandler;
     CardType selectedCard = CardType.None;
+    
 
 
     Unit initiator;
     Tile initiatedTile;
     Tile target;
     Unit unitTarget;
+    
+    
+    
     [SerializeField]
     GameObject unitInfo;
     [SerializeField]
     TextMeshProUGUI unitInfoText;
 
+
+    int MAXACTIONS = 2;
+    int actionsLeft = 2;
+    [SerializeField]
+    TextMeshProUGUI actionText;
 
 
     enum State 
@@ -64,7 +73,15 @@ public class InputHandler : MonoBehaviour
         playerList = new List<Player>();
         STARTINGDRAW = cards.transform.position;
         playerList.Add(new Player(Team.Green, STARTINGDRAW, cardGenerator));
+        for (int i = 0; i < this.startingCardCount; i++) 
+        {
+            this.playerList[0].drawCard(this.cards);
+        }
         playerList.Add(new Player(Team.Red, STARTINGDRAW, cardGenerator));
+        for (int i = 0; i < this.startingCardCount; i++)
+        {
+            this.playerList[1].drawCard(this.cards);
+        }
         for (int x = 0; x < units.transform.childCount; x++)
         {
             if (units.transform.GetChild(x).TryGetComponent<Unit>(out Unit u))
@@ -134,11 +151,14 @@ public class InputHandler : MonoBehaviour
     }
     void drawCard() 
     {
-        EventSystem.current.SetSelectedGameObject(null);
-        Player player = this.playerList[this.currentPlayerIndex];
-        if (player.canDrawCard(this.MAXCARDCOUNT)) 
-        {
-            player.drawCard(this.cards);
+        if (this.actionsLeft != 0) { 
+            EventSystem.current.SetSelectedGameObject(null);
+            Player player = this.playerList[this.currentPlayerIndex];
+            if (player.canDrawCard(this.MAXCARDCOUNT)) 
+            {
+                player.drawCard(this.cards);
+                this.changeActions(this.actionsLeft - 1);
+            }
         }
     }
     void clearLights()
@@ -147,10 +167,6 @@ public class InputHandler : MonoBehaviour
         {
             tile.lightTile(false);
         }
-    }
-
-    void moveUnit() {
-    
     }
 
     void SelectionHandler(Tile t)
@@ -166,6 +182,7 @@ public class InputHandler : MonoBehaviour
         else if (t.isLighten() && this.currentState == State.SelectedUnit1Move)
         {
             Order order = new Move(this.initiatedTile, t, this.initiator);
+            this.changeActions(this.actionsLeft - 1);
             order.playCard();
             this.playerList[this.currentPlayerIndex].removeCard(this.selectedCard);
             this.resetState();
@@ -221,6 +238,7 @@ public class InputHandler : MonoBehaviour
         else if(this.currentState == State.SelectedTile2Shoot)
         {
             Order order = new Shoot(this.initiator, this.initiatedTile.returnUnit(ut), this.opposingPlayer());
+            this.changeActions(this.actionsLeft - 1);
             order.playCard();
             this.playerList[this.currentPlayerIndex].removeCard(this.selectedCard);
             this.selectionHandler.disableButtons();
@@ -258,26 +276,37 @@ public class InputHandler : MonoBehaviour
         return this.playerList[0];
     }
 
-    public void startMove() 
+    public void startMove()
     {
         this.resetState();
-        this.selectedCard = CardType.Move;
-        List<Tile> hightLightList = this.playerList[currentPlayerIndex].canMoveFrom();
-        foreach (Tile t in hightLightList)
-        {
-            t.lightTile(true);
+        if (this.actionsLeft != 0) { 
+            this.selectedCard = CardType.Move;
+            List<Tile> hightLightList = this.playerList[currentPlayerIndex].canMoveFrom();
+            foreach (Tile t in hightLightList)
+            {
+                t.lightTile(true);
+            }
+            this.currentState = State.SelectedMove;
         }
-        this.currentState = State.SelectedMove;
     }
     public void startShoot()
     {
         this.resetState();
-        this.selectedCard = CardType.Shoot;
-        this.currentState = State.SelectedShoot;
-        List<Tile> hightLightList = this.opposingPlayer().canBeShotBy(this.playerList[currentPlayerIndex]);
-        foreach (Tile t in hightLightList) 
-        {
-            t.lightTile(true);
+        if (this.actionsLeft != 0) { 
+            this.selectedCard = CardType.Shoot;
+            this.currentState = State.SelectedShoot;
+            List<Tile> hightLightList = this.opposingPlayer().canBeShotBy(this.playerList[currentPlayerIndex]);
+            foreach (Tile t in hightLightList) 
+            {
+                t.lightTile(true);
+            }
         }
+    }
+
+    //EFFECT changes the actions to the given amount and displays as such
+    public void changeActions(int newAction) 
+    {
+        this.actionsLeft = newAction;
+        this.actionText.text = "Actions Lefts: " + this.actionsLeft;
     }
 }
