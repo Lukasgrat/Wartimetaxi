@@ -31,19 +31,15 @@ public class Unit : MonoBehaviour
     [SerializeField]
     public Team team;
     int health = 4;
+    int MAXHEALTH = 4;
+
     // Start is called before the first frame update
     void Start()
     {
         location.addUnit(this);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-   //returns whether this unit has the same team as the given team
+    //returns whether this unit has the same team as the given team
 
     public bool sameTeam(Team team) { return this.team == team; }
 
@@ -165,7 +161,7 @@ public class Unit : MonoBehaviour
         this.health -= 1;
         return this.health > 0;
     }
-    public String ToString() 
+    override public String ToString() 
     {
         return this.team + " " + this.type + "\n Health: " + this.health; 
     }
@@ -186,5 +182,14 @@ public class Unit : MonoBehaviour
             }
         }
         return false;
+    }
+
+    //EFFECT: Increases the health of this unit by one up to the maximum
+    public void recover() 
+    {
+        if (this.location.canRecover() &&  this.health < this.MAXHEALTH) 
+        {
+            this.health += 1;
+        }
     }
 }

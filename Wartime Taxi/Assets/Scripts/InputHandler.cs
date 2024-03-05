@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -50,7 +51,8 @@ public class InputHandler : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI actionText;
 
-
+    [SerializeField]
+    NextTurnButton nextTurnButton;
     enum State 
     { 
         Idle,
@@ -82,6 +84,7 @@ public class InputHandler : MonoBehaviour
         {
             this.playerList[1].drawCard(this.cards);
         }
+        this.playerList[1].showCards(false);
         for (int x = 0; x < units.transform.childCount; x++)
         {
             if (units.transform.GetChild(x).TryGetComponent<Unit>(out Unit u))
@@ -102,6 +105,7 @@ public class InputHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (actionsLeft == 0) { this.nextTurn(); }
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = 100;
         mousePos = cam.ScreenToWorldPoint(mousePos);
@@ -114,6 +118,13 @@ public class InputHandler : MonoBehaviour
                 if (hit.transform.gameObject.TryGetComponent<Tile>(out Tile t))
                 {
                     this.SelectionHandler(t);
+                    if (this.currentState == State.SelectedMove 
+                        || this.currentState == State.SelectedUnit1Move
+                        || this.currentState == State.SelectedShoot
+                        || this.currentState == State.SelectedUnit1Shoot)
+                    {
+                        this.resetState();
+                    }
                 }
             }
         }
@@ -122,29 +133,27 @@ public class InputHandler : MonoBehaviour
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             bool madeActive = false;
             RaycastHit[] hits = Physics.RaycastAll(ray, 100f);
+            foreach (RaycastHit hit in hits)
             {
-                foreach (RaycastHit hit in hits)
+                if (hit.transform.gameObject.TryGetComponent<Unit>(out Unit u))
                 {
-                    if (hit.transform.gameObject.TryGetComponent<Unit>(out Unit u))
+                    this.unitInfoText.text = u.ToString();
+                    if (u.sameTeam(Team.Green))
                     {
-                        this.unitInfoText.text = u.ToString();
-                        if (u.sameTeam(Team.Green))
-                        {
-                            this.unitInfoText.color = Color.green;
-                        }
-                        else if (u.sameTeam(Team.Red))
-                        {
-                            this.unitInfoText.color = Color.red;
-                        }
-                        else 
-                        {
-                            this.unitInfoText.color = Color.white;
-                        }
-                        madeActive = true;
-                        break;
+                        this.unitInfoText.color = Color.green;
                     }
-
+                    else if (u.sameTeam(Team.Red))
+                    {
+                        this.unitInfoText.color = Color.red;
+                    }
+                    else 
+                    {
+                        this.unitInfoText.color = Color.white;
+                    }
+                    madeActive = true;
+                    break;
                 }
+
             }
             this.unitInfo.SetActive(madeActive);
         }
@@ -182,10 +191,10 @@ public class InputHandler : MonoBehaviour
         else if (t.isLighten() && this.currentState == State.SelectedUnit1Move)
         {
             Order order = new Move(this.initiatedTile, t, this.initiator);
-            this.changeActions(this.actionsLeft - 1);
+            this.changeActions(this.actionsLeft - 1); 
             order.playCard();
             this.playerList[this.currentPlayerIndex].removeCard(this.selectedCard);
-            this.resetState();
+            this.resetState(); 
         }
         else if (t.isLighten() && this.currentState == State.SelectedShoot) {
             this.currentState = State.SelectedTile1Shoot;
@@ -246,26 +255,28 @@ public class InputHandler : MonoBehaviour
         }
     }
 
-    void nextTurn() 
+    void nextTurn()
     {
+        this.playerList[currentPlayerIndex].showCards(false);
         switch (this.currentPlayer) 
         { 
             case Team.Green:
                 this.currentPlayer = Team.Red;
-                this.playerList[currentPlayerIndex].showCards(false);
                 this.currentPlayerIndex += 1;
-                this.playerList[currentPlayerIndex].showCards(true);
+                nextTurnButton.appear(this.currentPlayer, this.boardState() * -1);
                 break;
             case Team.Red:
-                this.playerList[currentPlayerIndex].showCards(false);
                 this.currentPlayer = Team.Green;
                 turnNumber += 1;
                 this.currentPlayerIndex = 0;
-                this.playerList[currentPlayerIndex].showCards(true);
+                nextTurnButton.appear(this.currentPlayer, this.boardState());
                 break;
             default:
                 throw new System.Exception("Error, invalid state for current team reached");
         }
+        this.playerList[currentPlayerIndex].repairAll();
+        this.playerList[currentPlayerIndex].showCards(true);
+        this.changeActions(this.MAXACTIONS);
     }
 
     //returns the player whose turn its not
@@ -308,5 +319,11 @@ public class InputHandler : MonoBehaviour
     {
         this.actionsLeft = newAction;
         this.actionText.text = "Actions Lefts: " + this.actionsLeft;
+    }
+
+    //Returns the current value of the board, with positives favoring the first player and negatives the second
+    public int boardState() 
+    {
+        return 0;
     }
 }

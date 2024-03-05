@@ -12,6 +12,7 @@ public class Player
     Vector3 startingPoint;
     [SerializeField]
     CardGenerator generator;
+    int CARDSPACING = 110;
 
     public Player(Team team, Vector3 startingPoint, CardGenerator generator)
     {
@@ -27,7 +28,7 @@ public class Player
     {
         foreach (Card card in this.deck)
         {
-            card.enabled = shouldShow;
+            card.gameObject.SetActive(shouldShow);
         }
     }
     //Returns whether this player can draw a card given the current maximum
@@ -49,7 +50,7 @@ public class Player
     {
         Card gameObject = generator.generateCard();
         this.deck.Add(Object.Instantiate(gameObject,
-            new Vector3((this.deck.Count * 110) + parent.transform.position.x,
+            new Vector3((this.deck.Count * CARDSPACING) + parent.transform.position.x,
             parent.transform.position.y,
             parent.transform.position.z),
             new Quaternion(), parent.transform));
@@ -66,7 +67,7 @@ public class Player
             if (hasDestroyed)
             {
                 card.transform.position =
-                    new Vector3(card.transform.position.x - 80,
+                    new Vector3(card.transform.position.x - CARDSPACING,
                     card.transform.position.y,
                     card.transform.position.z);
             }
@@ -138,5 +139,14 @@ public class Player
             }
         }
         return tiles;
+    }
+
+    //Attempts to repair all units that are able to be repaired
+    public void repairAll() 
+    {
+        foreach (Unit u in this.units) 
+        {
+            u.recover();
+        }
     }
 }

@@ -16,10 +16,11 @@ public class Tile : MonoBehaviour
     List<Unit> units = new List<Unit>();
     public bool isLand;
     public bool isAirBase;
+    [SerializeField]
+    bool isDock;
     GameObject litTile;
     Team team = Team.Neutral;
     bool isLit = false;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -85,8 +86,8 @@ public class Tile : MonoBehaviour
             {
                 this.units[x].gameObject.transform.position = this.unitPositions[x] + this.transform.position;
             }
-        }
-        if (this.unitPositions.Count == 0)
+        };
+        if (this.units.Count == 0)
         {
             this.team = Team.Neutral;
         }
@@ -259,7 +260,6 @@ public class Tile : MonoBehaviour
 
 
     //Returns whether this tile is within n tiles of the given tile
-    //Onl
     public bool inRange(int n, Tile t) 
     {
         if (n < 0) 
@@ -280,5 +280,34 @@ public class Tile : MonoBehaviour
             returnBool = returnBool || tile.inRange(n - 1, t);
         }
         return returnBool;
+    }
+
+    public bool opposingTeam(Team team)
+    {
+        if (this.team == Team.Green && team == Team.Red)
+        {
+            return true;
+        }
+        else if (this.team == Team.Red && team == Team.Green)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public bool canRecover() 
+    {
+        if (!this.isDock) 
+        {
+            return false;
+        }
+        foreach (Tile t in adjacentTiles) 
+        {
+            if (t.opposingTeam(this.team)) 
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }
