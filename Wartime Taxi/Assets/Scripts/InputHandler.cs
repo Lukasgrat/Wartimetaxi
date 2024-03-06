@@ -207,6 +207,7 @@ public class InputHandler : MonoBehaviour
             order.playCard();
             this.playerList[this.currentPlayerIndex].removeCard(this.selectedCard);
             this.resetState();
+            this.playerList[this.currentPlayerIndex].consolidate();
         }
         else if (t.isLighten() && this.currentState == State.SelectedShoot)
         {
@@ -276,6 +277,7 @@ public class InputHandler : MonoBehaviour
             order.playCard();
             this.playerList[this.currentPlayerIndex].removeCard(this.selectedCard);
             this.resetState();
+            this.playerList[this.currentPlayerIndex].consolidate();
         }
         else 
         {

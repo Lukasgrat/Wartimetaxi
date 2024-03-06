@@ -34,6 +34,7 @@ public class Unit : MonoBehaviour
     int health = 4;
     [SerializeField]
     int MAXHEALTH = 4;
+    int appearingHealth;
     bool isFake = false;
     // Start is called before the first frame update
     void Start()
@@ -49,13 +50,9 @@ public class Unit : MonoBehaviour
         this.team = team;
         health = MAXHEALTH;
         this.isFake = false;
+        this.appearingHealth = MAXHEALTH;
     }
 
-    //Calibrates the unit to its start
-    public void calibrate()
-    {
-        this.location.addUnit(this);
-    }
     //Creates a unit, also describing if its a fake
     public Unit(Tile location, int MAXHEALTH, UnitType type, Team team, bool isFake)
     {
@@ -65,6 +62,7 @@ public class Unit : MonoBehaviour
         this.team = team;
         this.health = MAXHEALTH;
         this.isFake = isFake;
+        this.appearingHealth = MAXHEALTH;
     }
 
     //returns whether this unit has the same team as the given team
@@ -216,6 +214,16 @@ public class Unit : MonoBehaviour
         return false;
     }
 
+    //Updates the maximum health of this unit to meet in line with the standard maximum
+    public void updateMaxiumum(Player p, int standard)
+    {
+        if (this.MAXHEALTH == standard) 
+        {
+            return;
+        }
+        this.MAXHEALTH += p.totalHealth(this.type);
+    }
+
     //EFFECT: Increases the health of this unit by one up to the maximum
     public void recover() 
     {
@@ -260,5 +268,32 @@ public class Unit : MonoBehaviour
     public bool isReal() 
     {
         return !this.isFake || this.type != UnitType.Submarine; 
+    }
+
+    //Returns the sum of the given maximum health and this unit's health
+    public int addMaxHealthTo(int max) 
+    { 
+        return this.MAXHEALTH + max;
+    }
+
+    //EFFECT increases this unit's maximum health and
+    //standard health, assuming they are the same type
+    //returning if it was successful
+    public bool assimilate(Unit u) 
+    {
+        if (this.type != u.type) 
+        {
+            return false;
+        }
+        this.health += u.health;
+        this.MAXHEALTH += u.MAXHEALTH;
+        this.isFake = false;
+        return true;
+    }
+
+    //Returns if this and that unit have the same location
+    public bool sameLocation(Unit that) 
+    {
+        return this.location == that.location;
     }
 }

@@ -13,6 +13,7 @@ public class Player
     [SerializeField]
     CardGenerator generator;
     int CARDSPACING = 110;
+    int standardMaxHealth = 4;
 
     public Player(Team team, Vector3 startingPoint, CardGenerator generator)
     {
@@ -147,7 +148,51 @@ public class Player
     {
         foreach (Unit u in this.units) 
         {
+            u.updateMaxiumum(this, this.standardMaxHealth);
             u.recover();
+        }
+    }
+
+    //Given  Unittype, returns how much the assumed
+    //unit's health should increase to meet the maximum
+    //IE If there is a sub with 2 health in there, 
+    //the function will return 2 so that when the maximum
+    //health increases, it will meet the standard of 4
+
+    public int totalHealth(UnitType type) 
+    {
+        int x = 0;
+        foreach (Unit u in this.units) 
+        { 
+            if(u.sameType(type)) 
+            {
+                x = u.addMaxHealthTo(x);
+            }
+        }
+        return this.standardMaxHealth - x;
+    }
+
+    //Checks to see if there are any units that can be consolidated, doing so if there are
+    public void consolidate() 
+    {
+        if (this.units.Count < 2) 
+        {
+            return;
+        }
+        for (int i = 0; i < this.units.Count-1; i++) 
+        { 
+            for(int j = i + 1; j < this.units.Count; j++)
+            {
+                if (this.units[i].sameLocation(this.units[j])) 
+                {
+                    if (this.units[i].assimilate(this.units[j])) 
+                    {
+                        Debug.Log(this.units[j].gameObject.name +"|" +this.units[i].gameObject.name);
+                        this.destroyUnit(this.units[j]);
+                        j--;
+                    }
+                }
+            }
         }
     }
 }
