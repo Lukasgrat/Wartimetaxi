@@ -30,13 +30,41 @@ public class Unit : MonoBehaviour
     UnitType type;
     [SerializeField]
     public Team team;
+    [SerializeField]
     int health = 4;
+    [SerializeField]
     int MAXHEALTH = 4;
-
+    bool isFake = false;
     // Start is called before the first frame update
     void Start()
     {
         location.addUnit(this);
+    }
+    //Creates a new Unit
+    public void resetUnit(Tile location, int MAXHEALTH, UnitType type, Team team) 
+    {
+        this.location = location;
+        this.MAXHEALTH = MAXHEALTH;
+        this.type = type;
+        this.team = team;
+        health = MAXHEALTH;
+        this.isFake = false;
+    }
+
+    //Calibrates the unit to its start
+    public void calibrate()
+    {
+        this.location.addUnit(this);
+    }
+    //Creates a unit, also describing if its a fake
+    public Unit(Tile location, int MAXHEALTH, UnitType type, Team team, bool isFake)
+    {
+        this.location = location;
+        this.MAXHEALTH = MAXHEALTH;
+        this.type = type;
+        this.team = team;
+        this.health = MAXHEALTH;
+        this.isFake = isFake;
     }
 
     //returns whether this unit has the same team as the given team
@@ -98,6 +126,10 @@ public class Unit : MonoBehaviour
 
     public bool canShoot(Unit that) 
     {
+        if (this.isFake) 
+        {
+            return false;
+        }
         if (that.opposingTeam(this.team) && that.isVunerable(this.type)) 
         {
             if (this.type == UnitType.Airbase) 
@@ -163,7 +195,7 @@ public class Unit : MonoBehaviour
     }
     override public String ToString() 
     {
-        return this.team + " " + this.type + "\n Health: " + this.health; 
+        return this.team + " " + this.type + "\n Health: " + this.health + " Max:" + this.MAXHEALTH; 
     }
     //Removes u from its given locaton
     public void removeLocation() 
@@ -191,5 +223,42 @@ public class Unit : MonoBehaviour
         {
             this.health += 1;
         }
+    }
+
+    //Returns the amount of health this unit can spare
+    public int healthToSpare() 
+    {
+        return this.health - 1;
+    }
+
+    //Splits this unit to alter the given one with the given health and Tile,
+    //And if the new one is a fake(ignored for all units except submarine)
+    public void split(Tile tile, int health, bool isFake, Unit templateUnit) 
+    {
+        if (health > this.health) 
+        {
+            throw new Exception("Cannot remove " + health + " health for a split with" +
+                "a max health of " + this.health + " health.");
+        }
+        if (this.type == UnitType.Submarine)
+        {
+            //TODO
+            this.health -= health;
+            this.MAXHEALTH -= health;
+            templateUnit.resetUnit(tile, health, this.type, this.team);
+        }
+        else
+        {
+            this.health -= health;
+            this.MAXHEALTH -= health;
+            templateUnit.resetUnit(tile, health, this.type, this.team);
+        }
+
+    }
+
+    //Returns whether this unit is real or not
+    public bool isReal() 
+    {
+        return !this.isFake || this.type != UnitType.Submarine; 
     }
 }

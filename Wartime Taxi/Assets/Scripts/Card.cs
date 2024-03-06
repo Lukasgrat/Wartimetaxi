@@ -47,6 +47,9 @@ public class Card : MonoBehaviour
             case CardType.Shoot:
                 this.inputHandler.startShoot();
                 break;
+            case CardType.Split:
+                this.inputHandler.startSplit();
+                break;
             default:
                 throw new System.Exception("Error, card state " + this.cardType + "has not been accounted for.");
         }

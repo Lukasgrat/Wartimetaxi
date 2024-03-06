@@ -29,12 +29,15 @@ public class InputHandler : MonoBehaviour
     GameObject units;
     [SerializeField]
     SelectionHandler selectionHandler;
+    [SerializeField]
+    NumberSelector numberSelector;
     CardType selectedCard = CardType.None;
     
 
 
     Unit initiator;
     Tile initiatedTile;
+    Tile splitMovingTile;
     Tile target;
     Unit unitTarget;
     
@@ -53,6 +56,11 @@ public class InputHandler : MonoBehaviour
 
     [SerializeField]
     NextTurnButton nextTurnButton;
+
+    [SerializeField]
+    Unit greenTemplateUnit;
+    [SerializeField]
+    Unit redTemplateUnit;
     enum State 
     { 
         Idle,
@@ -66,6 +74,10 @@ public class InputHandler : MonoBehaviour
         SelectedUnit1Shoot,
         SelectedTile2Shoot,
         
+        SelectedSplit,
+        SelectedTile1Split,
+        SelectedUnit1Split,
+        SelectedTile2Split,
     }
     State currentState;
     // Start is called before the first frame update
@@ -115,7 +127,7 @@ public class InputHandler : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100))
             {
-                if (hit.transform.gameObject.TryGetComponent<Tile>(out Tile t))
+                if (hit.transform.gameObject.TryGetComponent(out Tile t))
                 {
                     this.SelectionHandler(t);
                     if (this.currentState == State.SelectedMove 
@@ -191,12 +203,13 @@ public class InputHandler : MonoBehaviour
         else if (t.isLighten() && this.currentState == State.SelectedUnit1Move)
         {
             Order order = new Move(this.initiatedTile, t, this.initiator);
-            this.changeActions(this.actionsLeft - 1); 
+            this.changeActions(this.actionsLeft - 1);
             order.playCard();
             this.playerList[this.currentPlayerIndex].removeCard(this.selectedCard);
-            this.resetState(); 
+            this.resetState();
         }
-        else if (t.isLighten() && this.currentState == State.SelectedShoot) {
+        else if (t.isLighten() && this.currentState == State.SelectedShoot)
+        {
             this.currentState = State.SelectedTile1Shoot;
             t.activateShootableUnits(this.selectionHandler);
             this.initiatedTile = t;
@@ -207,7 +220,20 @@ public class InputHandler : MonoBehaviour
             this.target = t;
             this.currentState = State.SelectedTile2Shoot;
             t.activateVunerableUnits(this.selectionHandler, initiator);
+            this.clearLights();
+        }
+        else if (t.isLighten() && this.currentState == State.SelectedSplit) 
+        {
+            this.currentState = State.SelectedTile1Split;
+            t.activateMoveableUnits(this.selectionHandler);
             this.initiatedTile = t;
+            this.clearLights();
+        }
+        else if (t.isLighten() && this.currentState == State.SelectedUnit1Split)
+        {
+            this.currentState = State.SelectedTile2Split;
+            this.numberSelector.enableButtons(this.initiator.healthToSpare());
+            this.splitMovingTile = t;
             this.clearLights();
         }
         else
@@ -223,8 +249,41 @@ public class InputHandler : MonoBehaviour
         this.selectedCard = CardType.None;
         this.clearLights();
         this.selectionHandler.disableButtons();
+        this.numberSelector.thoroughDisable();
+    }
+    
+    //Given a number, readies to split off that many units when the next tile is selected
+    public void numberSelcted(int num) 
+    {
+        if (this.currentState == State.SelectedTile2Split)
+        {
+            Unit templateUnit;
+            if (this.currentPlayer == Team.Green)
+            {
+                templateUnit = this.greenTemplateUnit;
+            }
+            else if (this.currentPlayer == Team.Red)
+            {
+                templateUnit = this.redTemplateUnit;
+            }
+            else 
+            {
+                throw new System.Exception("Team "+ this.currentPlayer + " has no given template for units");
+            }
+            Order order = new Split(this.initiator,this.initiatedTile,
+                this.splitMovingTile, this.playerList[this.currentPlayerIndex], num, false, templateUnit);
+            this.changeActions(this.actionsLeft - 1);
+            order.playCard();
+            this.playerList[this.currentPlayerIndex].removeCard(this.selectedCard);
+            this.resetState();
+        }
+        else 
+        {
+            throw new System.Exception("Error: invalid state of number selection reached");
+        }
     }
 
+    //Given a unit, finds that unit to be used for later operations and advance the state with that unit added
     public void unitSelected(UnitType ut) 
     {
         if (this.currentState == State.SelectedTile1Move)
@@ -246,12 +305,19 @@ public class InputHandler : MonoBehaviour
         }
         else if(this.currentState == State.SelectedTile2Shoot)
         {
-            Order order = new Shoot(this.initiator, this.initiatedTile.returnUnit(ut), this.opposingPlayer());
+            Order order = new Shoot(this.initiator, this.target.returnUnit(ut), this.opposingPlayer());
             this.changeActions(this.actionsLeft - 1);
             order.playCard();
             this.playerList[this.currentPlayerIndex].removeCard(this.selectedCard);
-            this.selectionHandler.disableButtons();
             this.resetState();
+        }
+        else if (this.currentState == State.SelectedTile1Split)
+        {
+            this.initiator = this.initiatedTile.returnUnit(ut);
+            this.clearLights();
+            this.initiatedTile.lightMoveable(this.initiator);
+            this.selectionHandler.disableButtons();
+            this.currentState = State.SelectedUnit1Split;
         }
     }
 
@@ -308,6 +374,21 @@ public class InputHandler : MonoBehaviour
             this.currentState = State.SelectedShoot;
             List<Tile> hightLightList = this.opposingPlayer().canBeShotBy(this.playerList[currentPlayerIndex]);
             foreach (Tile t in hightLightList) 
+            {
+                t.lightTile(true);
+            }
+        }
+    }
+
+    public void startSplit()
+    { 
+        this.resetState();
+        if (this.actionsLeft != 0) 
+        {
+            this.selectedCard = CardType.Split;
+            this.currentState = State.SelectedSplit;
+            List<Tile> hightLightList = this.playerList[currentPlayerIndex].canMoveFrom();
+            foreach (Tile t in hightLightList)
             {
                 t.lightTile(true);
             }

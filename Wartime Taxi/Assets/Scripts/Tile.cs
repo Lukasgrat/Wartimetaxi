@@ -13,6 +13,7 @@ public class Tile : MonoBehaviour
     List<Tile> adjacentTiles = new List<Tile>();
     [SerializeField]
     List<Vector3> unitPositions = new List<Vector3>();
+    [SerializeField]
     List<Unit> units = new List<Unit>();
     public bool isLand;
     public bool isAirBase;
@@ -61,7 +62,8 @@ public class Tile : MonoBehaviour
         }
     }
     //EFFECT: Adds the given unit to one of the locations
-    public void addUnit(Unit unit) {
+    public void addUnit(Unit unit)
+    {
         if (this.units.Count + 1 > this.unitPositions.Count)
         {
             throw new Exception("Error, tile" + this.name + " does not have enough positions to hold"

@@ -56,6 +56,7 @@ public class Player
             new Quaternion(), parent.transform));
     }
 
+
     //EFFECT: Removes the first instance of the given type of card within this person's hand
     // If none are found, does nothing
     public void removeCard(CardType type)
