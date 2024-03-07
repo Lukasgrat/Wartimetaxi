@@ -34,8 +34,8 @@ public class Unit : MonoBehaviour
     int health = 4;
     [SerializeField]
     int MAXHEALTH = 4;
-    int appearingHealth;
-    bool isFake = false;
+    FakeUnit fake;
+    bool hasFake = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -49,22 +49,8 @@ public class Unit : MonoBehaviour
         this.type = type;
         this.team = team;
         health = MAXHEALTH;
-        this.isFake = false;
-        this.appearingHealth = MAXHEALTH;
     }
-
-    //Creates a unit, also describing if its a fake
-    public Unit(Tile location, int MAXHEALTH, UnitType type, Team team, bool isFake)
-    {
-        this.location = location;
-        this.MAXHEALTH = MAXHEALTH;
-        this.type = type;
-        this.team = team;
-        this.health = MAXHEALTH;
-        this.isFake = isFake;
-        this.appearingHealth = MAXHEALTH;
-    }
-
+    
     //returns whether this unit has the same team as the given team
 
     public bool sameTeam(Team team) { return this.team == team; }
@@ -124,10 +110,6 @@ public class Unit : MonoBehaviour
 
     public bool canShoot(Unit that) 
     {
-        if (this.isFake) 
-        {
-            return false;
-        }
         if (that.opposingTeam(this.team) && that.isVunerable(this.type)) 
         {
             if (this.type == UnitType.Airbase) 
@@ -185,16 +167,45 @@ public class Unit : MonoBehaviour
     }
 
 
+    public void addFact(FakeUnit unit) 
+    { 
+        unit.setParentUnit(this);
+        this.fake = unit;
+        this.hasFake = true;
+    }
+
+    public void removeFake() 
+    {
+        this.hasFake = false;
+    }
+
     //Shoots this ship for 1 health, returnning if it survived the shot
-    public bool survivedShot() 
+    public virtual bool survivedShot() 
     {
         this.health -= 1;
         return this.health > 0;
     }
-    override public String ToString() 
-    {
-        return this.team + " " + this.type + "\n Health: " + this.health + " Max:" + this.MAXHEALTH; 
+
+    public bool hasFakeUnit() 
+    { 
+        return this.hasFake;
     }
+
+    //Returns the display string for this unit, given which team is asking
+    //if its the enemy team, it will not say if its real or fake
+    public virtual string displayString(Team team) 
+    {
+        if (this.type == UnitType.Submarine && !this.opposingTeam(team))
+        {
+            return this.team + " Real " + this.type + "\n Health: " + this.health + " Max:" + this.MAXHEALTH;
+
+        }
+        else
+        {
+            return this.team + " " + this.type + "\n Health: " + this.health + " Max:" + this.MAXHEALTH;
+        }
+    }
+
     //Removes u from its given locaton
     public void removeLocation() 
     { 
@@ -265,9 +276,9 @@ public class Unit : MonoBehaviour
     }
 
     //Returns whether this unit is real or not
-    public bool isReal() 
+    public virtual bool isReal() 
     {
-        return !this.isFake || this.type != UnitType.Submarine; 
+        return true; 
     }
 
     //Returns the sum of the given maximum health and this unit's health
@@ -287,7 +298,6 @@ public class Unit : MonoBehaviour
         }
         this.health += u.health;
         this.MAXHEALTH += u.MAXHEALTH;
-        this.isFake = false;
         return true;
     }
 

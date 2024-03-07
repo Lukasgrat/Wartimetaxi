@@ -7834,15 +7834,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -8541,6 +8541,7 @@ GameObject:
   - component: {fileID: 1713084146}
   - component: {fileID: 1713084148}
   - component: {fileID: 1713084147}
+  - component: {fileID: 1713084149}
   m_Layer: 5
   m_Name: Fake Screen
   m_TagString: Untagged
@@ -8608,6 +8609,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1713084145}
   m_CullTransparentMesh: 1
+--- !u!114 &1713084149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713084145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55a45fcaf02824448997b88ac1cb8c47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stationaryButton: {fileID: 1546597953}
+  movingButton: {fileID: 302523102}
+  inputHandler: {fileID: 209989294}
 --- !u!1 &1724369263
 GameObject:
   m_ObjectHideFlags: 0
@@ -10218,7 +10234,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1366172165202144793, guid: 1095d1303b1b18349b1c628c3ecb6f9f, type: 3}
       propertyPath: type
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1366172165202144793, guid: 1095d1303b1b18349b1c628c3ecb6f9f, type: 3}
       propertyPath: health

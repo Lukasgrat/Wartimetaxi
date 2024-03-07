@@ -61,6 +61,8 @@ public class InputHandler : MonoBehaviour
     Unit greenTemplateUnit;
     [SerializeField]
     Unit redTemplateUnit;
+    [SerializeField]
+    
     enum State 
     { 
         Idle,
@@ -149,7 +151,7 @@ public class InputHandler : MonoBehaviour
             {
                 if (hit.transform.gameObject.TryGetComponent<Unit>(out Unit u))
                 {
-                    this.unitInfoText.text = u.ToString();
+                    this.unitInfoText.text = u.displayString(this.currentPlayer);
                     if (u.sameTeam(Team.Green))
                     {
                         this.unitInfoText.color = Color.green;
@@ -192,55 +194,61 @@ public class InputHandler : MonoBehaviour
 
     void SelectionHandler(Tile t)
     {
-        if (t.isLighten() && this.currentState == State.SelectedMove)
+        if (!t.isLighten()) 
+        { 
+            resetState();
+        }
+        else if ( this.currentState == State.SelectedMove)
         {
 
             this.currentState = State.SelectedTile1Move;
             t.activateMoveableUnits(this.selectionHandler);
             this.initiatedTile = t;
-            this.clearLights();
         }
-        else if (t.isLighten() && this.currentState == State.SelectedUnit1Move)
+        else if (this.currentState == State.SelectedUnit1Move)
         {
             Order order = new Move(this.initiatedTile, t, this.initiator);
-            this.changeActions(this.actionsLeft - 1);
-            order.playCard();
-            this.playerList[this.currentPlayerIndex].removeCard(this.selectedCard);
-            this.resetState();
+            this.playOrder(order);
             this.playerList[this.currentPlayerIndex].consolidate();
         }
-        else if (t.isLighten() && this.currentState == State.SelectedShoot)
+        else if (this.currentState == State.SelectedShoot)
         {
             this.currentState = State.SelectedTile1Shoot;
             t.activateShootableUnits(this.selectionHandler);
             this.initiatedTile = t;
-            this.clearLights();
         }
-        else if (t.isLighten() && this.currentState == State.SelectedUnit1Shoot)
+        else if (this.currentState == State.SelectedUnit1Shoot)
         {
             this.target = t;
             this.currentState = State.SelectedTile2Shoot;
             t.activateVunerableUnits(this.selectionHandler, initiator);
-            this.clearLights();
         }
-        else if (t.isLighten() && this.currentState == State.SelectedSplit) 
+        else if (this.currentState == State.SelectedSplit) 
         {
             this.currentState = State.SelectedTile1Split;
             t.activateMoveableUnits(this.selectionHandler);
             this.initiatedTile = t;
-            this.clearLights();
         }
-        else if (t.isLighten() && this.currentState == State.SelectedUnit1Split)
+        else if (this.currentState == State.SelectedUnit1Split)
         {
             this.currentState = State.SelectedTile2Split;
             this.numberSelector.enableButtons(this.initiator.healthToSpare());
             this.splitMovingTile = t;
-            this.clearLights();
         }
         else
         {
             resetState();
         }
+        this.clearLights();
+    }
+
+    //EFFECT plays out the given order on this game
+    void playOrder(Order order)
+    {
+        this.changeActions(this.actionsLeft - 1);
+        order.playCard();
+        this.playerList[this.currentPlayerIndex].removeCard(this.selectedCard);
+        this.resetState();
     }
 
     //EFFECT: Resets the built up state from a move
@@ -273,16 +281,22 @@ public class InputHandler : MonoBehaviour
             }
             Order order = new Split(this.initiator,this.initiatedTile,
                 this.splitMovingTile, this.playerList[this.currentPlayerIndex], num, false, templateUnit);
-            this.changeActions(this.actionsLeft - 1);
-            order.playCard();
-            this.playerList[this.currentPlayerIndex].removeCard(this.selectedCard);
-            this.resetState();
+            this.playOrder(order);
             this.playerList[this.currentPlayerIndex].consolidate();
         }
         else 
         {
             throw new System.Exception("Error: invalid state of number selection reached");
         }
+    }
+
+
+    //Activated upon a signal from an outside movement source,
+    // once it is, the fake will be created and the real one moving
+    // as neccessary
+    public void selectedFake(bool isMovingFake) 
+    { 
+    
     }
 
     //Given a unit, finds that unit to be used for later operations and advance the state with that unit added
@@ -308,10 +322,7 @@ public class InputHandler : MonoBehaviour
         else if(this.currentState == State.SelectedTile2Shoot)
         {
             Order order = new Shoot(this.initiator, this.target.returnUnit(ut), this.opposingPlayer());
-            this.changeActions(this.actionsLeft - 1);
-            order.playCard();
-            this.playerList[this.currentPlayerIndex].removeCard(this.selectedCard);
-            this.resetState();
+            this.playOrder(order);
         }
         else if (this.currentState == State.SelectedTile1Split)
         {
