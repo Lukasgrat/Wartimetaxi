@@ -64,9 +64,21 @@ class Shoot : Order
 
     public void playCard()
     {
-        if (!target.survivedShot()) 
+        target.shot(1);
+        if (!this.target.isReal())
         {
-           targetedPlayer.destroyUnit(this.target);
+            this.targetedPlayer.destroyUnit(this.target);
+        }
+        else
+        {
+            if (this.target.hasFake)
+            {
+                this.targetedPlayer.destroyUnit(this.target.getFake());
+            }
+            if (!target.canSurviveShot(0))
+            {
+                targetedPlayer.destroyUnit(this.target);
+            }
         }
     }
 
@@ -85,27 +97,67 @@ class Split : Order
     Player p;
     bool isFake;
     Unit templateUnit;
-    public Split(Unit u, Tile currentTile, Tile nextTile, Player p, int splitHealth, bool isFake, Unit templateUnit) 
+    FakeUnit fakeTemplateUnit;
+    bool shouldSwapPlaces;
+    public Split(Unit u, Tile currentTile, Tile nextTile, Player p, int splitHealth, Unit templateUnit) 
     { 
         this.u = u;
         this.nextTile = nextTile;
         this.p = p;
         this.currentTile = currentTile;
         this.splitHealth = splitHealth;
-        this.isFake = isFake;
         this.templateUnit = templateUnit;
+        this.isFake = false;
     }
+
+    public Split(Unit u, Tile currentTile, Tile nextTile, Player p, FakeUnit fakeTemplateUnit, bool shouldSwapPlaces) 
+    {
+        this.u = u;
+        this.currentTile = currentTile;
+        this.nextTile = nextTile;
+        this.p = p;
+        this.fakeTemplateUnit = fakeTemplateUnit;
+        this.shouldSwapPlaces = shouldSwapPlaces;
+        this.isFake = true;
+    }
+
 
     public void playCard() 
     {
+        if (!isFake)
+        {
+            this.splitReal();
+        }
+        else 
+        { 
+            this.splitFake();
+        }
+    }
+
+    void splitReal()
+    {
         Unit newUnit = this.templateUnit;
-        this.u.split(this.nextTile, splitHealth, this.isFake, newUnit);
+        this.u.split(this.nextTile, splitHealth, newUnit);
         GameObject unitsParent = GameObject.Find("Units");
         Unit finishedUnit = Object.Instantiate(newUnit,
            Vector3.zero,
             new Quaternion(), unitsParent.transform);
         p.addUnit(finishedUnit);
+
     }
+
+    void splitFake() 
+    {
+        FakeUnit newUnit = this.fakeTemplateUnit;
+        this.u.split(this.nextTile, newUnit, this.shouldSwapPlaces);
+        GameObject unitsParent = GameObject.Find("Units");
+        FakeUnit finishedUnit = Object.Instantiate(newUnit,
+            Vector3.zero,
+            new Quaternion(), unitsParent.transform);
+        p.addUnit(finishedUnit);
+        this.u.addFake(finishedUnit);
+    }
+
 
     public bool isValid() 
     {

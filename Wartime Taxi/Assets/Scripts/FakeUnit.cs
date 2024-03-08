@@ -1,22 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class FakeUnit : Unit
 {
     [SerializeField]
-    Tile location;
-    [SerializeField]
-    UnitType type;
-    [SerializeField]
-    public Team team;
-    [SerializeField]
-    int health = 4;
-    [SerializeField]
-    int MAXHEALTH = 4;
-    [SerializeField]
     Unit realUnit;
-
     //Adds the given unit as the parent unit of this fake unit
     //WILL THROW AN ERROR IF THE UNIT TYPES ARE NOT THE SAME
     //(A SUBMARINE CANNOT BE A FAKE OF A DESTROYER)
@@ -32,15 +22,20 @@ public class FakeUnit : Unit
     // Start is called before the first frame update
     void Start()
     {
-        
+        location.addUnit(this);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
+    //Returns whether this unit can hit that unit
+    public override bool canShoot(Unit that) 
+    {
+        return false;
+    }
     //Returns whether this unit is real or not
     public override bool isReal()
     {
@@ -48,11 +43,14 @@ public class FakeUnit : Unit
     }
 
     //Shoots this ship for 1 health, returnning if it survived the shot
-    public override bool survivedShot()
+    public override bool canSurviveShot(int damage)
     {
-        return false;
+        return  false;
     }
-
+    public override void shot(int damage) 
+    {
+        this.health = 0;
+    }
 
     //Returns the display string for this unit, given which team is asking
     //if its the enemy team, it will not say if its real or fake
@@ -67,5 +65,14 @@ public class FakeUnit : Unit
         {
             return this.team + " " + this.type + "\n Health: " + this.health + " Max:" + this.MAXHEALTH;
         }
+    }
+
+    //Self destructs this unit if its a fake unit
+    //Given this is a fake unit, it does
+    public override void selfDestruction()
+    {
+        this.removeLocation();
+        this.realUnit.removeFake();
+        Object.Destroy(this.gameObject);
     }
 }

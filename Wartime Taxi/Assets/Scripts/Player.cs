@@ -39,7 +39,7 @@ public class Player
     }
     public void addUnit(Unit u)
     {
-        if (u.team != this.team)
+        if (!u.sameTeam(this.team))
         {
             throw new System.Exception("Team mismatch for player and added unit");
         }
@@ -97,6 +97,19 @@ public class Player
         return returnTiles;
     }
 
+    public List<Tile> canSplitFrom()
+    {
+        List<Tile> returnTiles = new List<Tile>();
+        foreach (Unit u in units)
+        {
+            if (u.canMoveOff() && u.canSurviveShot(1))
+            {
+                u.addLocationTo(returnTiles);
+            }
+        }
+        return returnTiles;
+    }
+
 
     //Returns the list of tiles of the attackers of this player be shot by the given player in any form
     public List<Tile> canBeShotBy(Player that)
@@ -125,8 +138,7 @@ public class Player
     public void destroyUnit(Unit u)
     {
         this.units.Remove(u);
-        u.removeLocation();
-        Object.Destroy(u.gameObject);
+        u.selfDestruction();
     }
 
     //returns all tiles vunerable to the give unit
@@ -187,7 +199,6 @@ public class Player
                 {
                     if (this.units[i].assimilate(this.units[j])) 
                     {
-                        Debug.Log(this.units[j].gameObject.name +"|" +this.units[i].gameObject.name);
                         this.destroyUnit(this.units[j]);
                         j--;
                     }

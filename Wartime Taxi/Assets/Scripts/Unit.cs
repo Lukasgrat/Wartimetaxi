@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public enum UnitType
 {
@@ -25,17 +26,17 @@ public enum Team
 public class Unit : MonoBehaviour
 {
     [SerializeField]
-    Tile location;
+    internal Tile location;
     [SerializeField]
-    UnitType type;
+    internal UnitType type;
     [SerializeField]
-    public Team team;
+    internal Team team;
     [SerializeField]
-    int health = 4;
+    internal int health = 4;
     [SerializeField]
-    int MAXHEALTH = 4;
+    internal int MAXHEALTH = 4;
     FakeUnit fake;
-    bool hasFake = false;
+    internal bool hasFake = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -50,7 +51,7 @@ public class Unit : MonoBehaviour
         this.team = team;
         health = MAXHEALTH;
     }
-    
+   
     //returns whether this unit has the same team as the given team
 
     public bool sameTeam(Team team) { return this.team == team; }
@@ -91,7 +92,12 @@ public class Unit : MonoBehaviour
 
     public void moveTo(Tile tile) 
     {
-        this.location = tile; 
+        this.location = tile;
+
+        if (tile != null)
+        {
+            tile.changeTeam(this.team);
+        }
     }
 
     public bool canMoveToLand() 
@@ -108,7 +114,7 @@ public class Unit : MonoBehaviour
 
     //Returns whether this unit can hit that unit
 
-    public bool canShoot(Unit that) 
+    public virtual bool canShoot(Unit that) 
     {
         if (that.opposingTeam(this.team) && that.isVunerable(this.type)) 
         {
@@ -167,7 +173,7 @@ public class Unit : MonoBehaviour
     }
 
 
-    public void addFact(FakeUnit unit) 
+    public void addFake(FakeUnit unit) 
     { 
         unit.setParentUnit(this);
         this.fake = unit;
@@ -179,11 +185,26 @@ public class Unit : MonoBehaviour
         this.hasFake = false;
     }
 
-    //Shoots this ship for 1 health, returnning if it survived the shot
-    public virtual bool survivedShot() 
+
+    //EFFECT: Decreases the unit's health by the given amount, capping at 0 health
+    public virtual void shot(int damage) 
     {
-        this.health -= 1;
-        return this.health > 0;
+        if (this.health - damage < 0)
+        {
+            this.health = 0;
+        }
+        else 
+        {
+            this.health -= damage;
+        }
+        
+    }
+
+    //Returns if this unit can survive the given amount of damage
+    //If the damage is zero, it implies its requesting if the unit is alive
+    public virtual bool canSurviveShot(int damage) 
+    {
+        return this.health - damage > 0;
     }
 
     public bool hasFakeUnit() 
@@ -252,28 +273,34 @@ public class Unit : MonoBehaviour
 
     //Splits this unit to alter the given one with the given health and Tile,
     //And if the new one is a fake(ignored for all units except submarine)
-    public void split(Tile tile, int health, bool isFake, Unit templateUnit) 
+    public void split(Tile tile, int health, Unit templateUnit) 
     {
         if (health > this.health) 
         {
             throw new Exception("Cannot remove " + health + " health for a split with" +
                 "a max health of " + this.health + " health.");
         }
-        if (this.type == UnitType.Submarine)
-        {
-            //TODO
-            this.health -= health;
-            this.MAXHEALTH -= health;
-            templateUnit.resetUnit(tile, health, this.type, this.team);
-        }
-        else
-        {
-            this.health -= health;
-            this.MAXHEALTH -= health;
-            templateUnit.resetUnit(tile, health, this.type, this.team);
-        }
-
+        this.health -= health;
+        this.MAXHEALTH -= health;
+        templateUnit.resetUnit(tile, health, this.type, this.team);
     }
+
+    //Splits this unit to alter the given one with the given health and Tile,
+    //And if the new one is a fake(ignored for all units except submarine)
+    public void split(Tile tile, FakeUnit templateUnit, bool shouldSwapPlaces)
+    {
+        if (shouldSwapPlaces)
+        {
+            templateUnit.resetUnit(this.location, this.health, this.type, this.team);
+            Order moveOrder = new Move(this.location, tile, this);
+            moveOrder.playCard();
+        }
+        else 
+        {
+            templateUnit.resetUnit(tile, this.health, this.type, this.team);
+        }
+    }
+
 
     //Returns whether this unit is real or not
     public virtual bool isReal() 
@@ -281,10 +308,16 @@ public class Unit : MonoBehaviour
         return true; 
     }
 
-    //Returns the sum of the given maximum health and this unit's health
+    //Returns the sum of the given maximum health and this unit's max health
     public int addMaxHealthTo(int max) 
     { 
         return this.MAXHEALTH + max;
+    }
+
+    //Returns the sum of the given health and this unit's health
+    public int addHealthTo(int health)
+    {
+        return this.health + health;
     }
 
     //EFFECT increases this unit's maximum health and
@@ -296,6 +329,10 @@ public class Unit : MonoBehaviour
         {
             return false;
         }
+        if (!u.isReal()) 
+        {
+            return true;
+        } 
         this.health += u.health;
         this.MAXHEALTH += u.MAXHEALTH;
         return true;
@@ -305,5 +342,35 @@ public class Unit : MonoBehaviour
     public bool sameLocation(Unit that) 
     {
         return this.location == that.location;
+    }
+
+ 
+    //Self destructs this unit if its a fake unit
+    //Given this is a real unit, does nothing
+    public virtual void selfDestruction() 
+    {
+
+        this.removeLocation();
+        Destroy(this.gameObject);
+    }
+
+    public void unlinkFake() 
+    {
+        this.fake = null;
+        this.hasFake = false;
+    }
+
+    //Attempts to get the fake unit from this unit,
+    //if it has none, throws error
+    public FakeUnit getFake() 
+    {
+        if (this.hasFake)
+        {
+            return this.fake;
+        }
+        else 
+        {
+            throw new Exception("Error: attempted to retrieve non-existant fake unit from" + this.name);
+        }
     }
 }

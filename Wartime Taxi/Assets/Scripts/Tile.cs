@@ -73,7 +73,18 @@ public class Tile : MonoBehaviour
         this.units.Add(unit);
 
         unit.moveTo(this);
-        this.team = this.units[0].team;
+    }
+
+    //Given a team, attempts to change the team of the tile
+    //note, due to how the game is played, the teams cannot swap immediantly from
+    //Green to red and vice versa, so it will throw an error if that occurs
+    public void changeTeam(Team team) 
+    {
+        if (this.opposingTeam(team)) 
+        {
+            throw new Exception("Error: Invalid swapping of teams on tile " + this.gameObject.name);
+        }
+        this.team = team;
     }
 
 

@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -39,7 +40,6 @@ public class InputHandler : MonoBehaviour
     Tile initiatedTile;
     Tile splitMovingTile;
     Tile target;
-    Unit unitTarget;
     
     
     
@@ -61,8 +61,14 @@ public class InputHandler : MonoBehaviour
     Unit greenTemplateUnit;
     [SerializeField]
     Unit redTemplateUnit;
+
     [SerializeField]
-    
+    FakeUnit greenFakeTemplateUnit;
+    [SerializeField]
+    FakeUnit redFakeTemplateUnit;
+
+    [SerializeField]
+    FakeButton fakeButton;
     enum State 
     { 
         Idle,
@@ -80,6 +86,7 @@ public class InputHandler : MonoBehaviour
         SelectedTile1Split,
         SelectedUnit1Split,
         SelectedTile2Split,
+        SelectingFakeSplit,
     }
     State currentState;
     // Start is called before the first frame update
@@ -103,11 +110,11 @@ public class InputHandler : MonoBehaviour
         {
             if (units.transform.GetChild(x).TryGetComponent<Unit>(out Unit u))
             {
-                if (u.team == Team.Green)
+                if (u.sameTeam(Team.Green))
                 {
                     this.playerList[0].addUnit(u);
                 }
-                else if(u.team == Team.Red) 
+                else if(u.sameTeam(Team.Red)) 
                 {
                     this.playerList[1].addUnit(u);
                 }
@@ -256,6 +263,7 @@ public class InputHandler : MonoBehaviour
     {
         this.currentState = State.Idle;
         this.selectedCard = CardType.None;
+        this.fakeButton.gameObject.SetActive(false);
         this.clearLights();
         this.selectionHandler.disableButtons();
         this.numberSelector.thoroughDisable();
@@ -266,28 +274,42 @@ public class InputHandler : MonoBehaviour
     {
         if (this.currentState == State.SelectedTile2Split)
         {
-            Unit templateUnit;
-            if (this.currentPlayer == Team.Green)
+            if (this.initiator.sameType(UnitType.Submarine) && !this.initiator.hasFakeUnit())
             {
-                templateUnit = this.greenTemplateUnit;
-            }
-            else if (this.currentPlayer == Team.Red)
-            {
-                templateUnit = this.redTemplateUnit;
+                this.fakeButton.gameObject.SetActive(true);
+                this.currentState = State.SelectingFakeSplit;
             }
             else 
             {
-                throw new System.Exception("Team "+ this.currentPlayer + " has no given template for units");
+                this.createRealUnit(num);
             }
-            Order order = new Split(this.initiator,this.initiatedTile,
-                this.splitMovingTile, this.playerList[this.currentPlayerIndex], num, false, templateUnit);
-            this.playOrder(order);
-            this.playerList[this.currentPlayerIndex].consolidate();
         }
         else 
         {
-            throw new System.Exception("Error: invalid state of number selection reached");
+            throw new Exception("Error: invalid state of number selection reached");
         }
+    }
+
+    void createRealUnit(int health)
+    {
+        Unit templateUnit;
+        if (this.currentPlayer == Team.Green)
+        {
+            templateUnit = this.greenTemplateUnit;
+        }
+        else if (this.currentPlayer == Team.Red)
+        {
+            templateUnit = this.redTemplateUnit;
+        }
+        else
+        {
+            throw new Exception("Team " + this.currentPlayer + " has no given template for units");
+        }
+        Order order = new Split(this.initiator, this.initiatedTile,
+            this.splitMovingTile, this.playerList[this.currentPlayerIndex], health, templateUnit);
+        this.playOrder(order);
+        this.playerList[this.currentPlayerIndex].consolidate();
+
     }
 
 
@@ -295,8 +317,31 @@ public class InputHandler : MonoBehaviour
     // once it is, the fake will be created and the real one moving
     // as neccessary
     public void selectedFake(bool isMovingFake) 
-    { 
-    
+    {
+        if (this.currentState == State.SelectingFakeSplit)
+        {
+            FakeUnit templateUnit;
+            if (this.currentPlayer == Team.Green)
+            {
+                templateUnit = this.greenFakeTemplateUnit;
+            }
+            else if (this.currentPlayer == Team.Red)
+            {
+                templateUnit = this.redFakeTemplateUnit;
+            }
+            else
+            {
+                throw new Exception("Team " + this.currentPlayer + " has no given template for units");
+            }
+            Order order = new Split(this.initiator, this.initiatedTile,
+                this.splitMovingTile, this.playerList[this.currentPlayerIndex], templateUnit, !isMovingFake);
+            this.playOrder(order);
+            this.playerList[this.currentPlayerIndex].consolidate();
+        }
+        else
+        {
+            throw new Exception("Error: invalid state  for fake selection reached");
+        }
     }
 
     //Given a unit, finds that unit to be used for later operations and advance the state with that unit added
@@ -351,7 +396,7 @@ public class InputHandler : MonoBehaviour
                 nextTurnButton.appear(this.currentPlayer, this.boardState());
                 break;
             default:
-                throw new System.Exception("Error, invalid state for current team reached");
+                throw new Exception("Error, invalid state for current team reached");
         }
         this.playerList[currentPlayerIndex].repairAll();
         this.playerList[currentPlayerIndex].showCards(true);
@@ -400,7 +445,7 @@ public class InputHandler : MonoBehaviour
         {
             this.selectedCard = CardType.Split;
             this.currentState = State.SelectedSplit;
-            List<Tile> hightLightList = this.playerList[currentPlayerIndex].canMoveFrom();
+            List<Tile> hightLightList = this.playerList[currentPlayerIndex].canSplitFrom();
             foreach (Tile t in hightLightList)
             {
                 t.lightTile(true);

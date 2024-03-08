@@ -550,7 +550,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   location: {fileID: 1662824140}
-  type: 2
+  type: 4
   team: 0
   health: 4
   MAXHEALTH: 4
@@ -1365,6 +1365,9 @@ MonoBehaviour:
   nextTurnButton: {fileID: 1414614703}
   greenTemplateUnit: {fileID: 1366172165202144793, guid: 1095d1303b1b18349b1c628c3ecb6f9f, type: 3}
   redTemplateUnit: {fileID: 2198003112052303894, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
+  greenFakeTemplateUnit: {fileID: 7728044570072938668, guid: 15c15b1876cd33d4f819190fd1f7c7c7, type: 3}
+  redFakeTemplateUnit: {fileID: 66277821354447347, guid: da7740a9475e805439971cd8cd26ec89, type: 3}
+  fakeButton: {fileID: 1713084149}
 --- !u!1 &219879523
 GameObject:
   m_ObjectHideFlags: 0
@@ -10234,11 +10237,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1366172165202144793, guid: 1095d1303b1b18349b1c628c3ecb6f9f, type: 3}
       propertyPath: type
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1366172165202144793, guid: 1095d1303b1b18349b1c628c3ecb6f9f, type: 3}
       propertyPath: health
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1366172165202144793, guid: 1095d1303b1b18349b1c628c3ecb6f9f, type: 3}
       propertyPath: location
@@ -10246,7 +10249,7 @@ PrefabInstance:
       objectReference: {fileID: 271294882}
     - target: {fileID: 1366172165202144793, guid: 1095d1303b1b18349b1c628c3ecb6f9f, type: 3}
       propertyPath: MAXHEALTH
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2447628114977766844, guid: 1095d1303b1b18349b1c628c3ecb6f9f, type: 3}
       propertyPath: m_Name
@@ -10306,9 +10309,13 @@ PrefabInstance:
     m_TransformParent: {fileID: 1724369264}
     m_Modifications:
     - target: {fileID: 2198003112052303894, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
+      propertyPath: type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2198003112052303894, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
       propertyPath: location
       value: 
-      objectReference: {fileID: 1039919380}
+      objectReference: {fileID: 1852288630}
     - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.38
