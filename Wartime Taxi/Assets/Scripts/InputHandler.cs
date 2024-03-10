@@ -12,7 +12,7 @@ public class InputHandler : MonoBehaviour
 {
     Camera cam;
     int turnNumber = 0;
-    Team currentPlayer = Team.Green;
+    Team currentPlayerTeam = Team.Green;
     int currentPlayerIndex = 0;
     [SerializeField]
     List<Tile> tiles;
@@ -139,13 +139,6 @@ public class InputHandler : MonoBehaviour
                 if (hit.transform.gameObject.TryGetComponent(out Tile t))
                 {
                     this.SelectionHandler(t);
-                    if (this.currentState == State.SelectedMove 
-                        || this.currentState == State.SelectedUnit1Move
-                        || this.currentState == State.SelectedShoot
-                        || this.currentState == State.SelectedUnit1Shoot)
-                    {
-                        this.resetState();
-                    }
                 }
             }
         }
@@ -158,7 +151,7 @@ public class InputHandler : MonoBehaviour
             {
                 if (hit.transform.gameObject.TryGetComponent<Unit>(out Unit u))
                 {
-                    this.unitInfoText.text = u.displayString(this.currentPlayer);
+                    this.unitInfoText.text = u.displayString(this.currentPlayerTeam);
                     if (u.sameTeam(Team.Green))
                     {
                         this.unitInfoText.color = Color.green;
@@ -183,7 +176,7 @@ public class InputHandler : MonoBehaviour
     {
         if (this.actionsLeft != 0) { 
             EventSystem.current.SetSelectedGameObject(null);
-            Player player = this.playerList[this.currentPlayerIndex];
+            Player player = this.currentPlayer();
             if (player.canDrawCard(this.MAXCARDCOUNT)) 
             {
                 player.drawCard(this.cards);
@@ -192,7 +185,7 @@ public class InputHandler : MonoBehaviour
         }
     }
     void clearLights()
-    { 
+    {
         foreach (Tile tile in tiles)
         {
             tile.lightTile(false);
@@ -201,8 +194,8 @@ public class InputHandler : MonoBehaviour
 
     void SelectionHandler(Tile t)
     {
-        if (!t.isLighten()) 
-        { 
+        if (!t.isLighten())
+        {
             resetState();
         }
         else if ( this.currentState == State.SelectedMove)
@@ -216,7 +209,7 @@ public class InputHandler : MonoBehaviour
         {
             Order order = new Move(this.initiatedTile, t, this.initiator);
             this.playOrder(order);
-            this.playerList[this.currentPlayerIndex].consolidate();
+            this.currentPlayer().consolidate();
         }
         else if (this.currentState == State.SelectedShoot)
         {
@@ -246,7 +239,17 @@ public class InputHandler : MonoBehaviour
         {
             resetState();
         }
-        this.clearLights();
+        if ((this.currentState == State.SelectedTile1Move
+            || this.currentState == State.SelectedTile1Shoot
+            || this.currentState == State.SelectedTile1Split)
+            && t.unitType() != UnitType.None)
+        {
+            this.unitSelected(t.unitType());
+        }
+        else
+        {
+            this.clearLights();
+        }
     }
 
     //EFFECT plays out the given order on this game
@@ -254,7 +257,7 @@ public class InputHandler : MonoBehaviour
     {
         this.changeActions(this.actionsLeft - 1);
         order.playCard();
-        this.playerList[this.currentPlayerIndex].removeCard(this.selectedCard);
+        this.currentPlayer().removeCard(this.selectedCard);
         this.resetState();
     }
 
@@ -274,7 +277,7 @@ public class InputHandler : MonoBehaviour
     {
         if (this.currentState == State.SelectedTile2Split)
         {
-            if (this.initiator.sameType(UnitType.Submarine) && !this.initiator.hasFakeUnit())
+            if (this.initiator.sameType(UnitType.Submarine) && !this.currentPlayer().containsFake())
             {
                 this.fakeButton.gameObject.SetActive(true);
                 this.currentState = State.SelectingFakeSplit;
@@ -293,23 +296,29 @@ public class InputHandler : MonoBehaviour
     void createRealUnit(int health)
     {
         Unit templateUnit;
-        if (this.currentPlayer == Team.Green)
+        if (this.currentPlayerTeam == Team.Green)
         {
             templateUnit = this.greenTemplateUnit;
         }
-        else if (this.currentPlayer == Team.Red)
+        else if (this.currentPlayerTeam == Team.Red)
         {
             templateUnit = this.redTemplateUnit;
         }
         else
         {
-            throw new Exception("Team " + this.currentPlayer + " has no given template for units");
+            throw new Exception("Team " + this.currentPlayerTeam + " has no given template for units");
         }
         Order order = new Split(this.initiator, this.initiatedTile,
-            this.splitMovingTile, this.playerList[this.currentPlayerIndex], health, templateUnit);
+            this.splitMovingTile, this.currentPlayer(), health, templateUnit);
         this.playOrder(order);
-        this.playerList[this.currentPlayerIndex].consolidate();
+        this.currentPlayer().consolidate();
 
+    }
+
+    //returns the current player
+    Player currentPlayer() 
+    {
+        return this.playerList[this.currentPlayerIndex];
     }
 
 
@@ -321,22 +330,22 @@ public class InputHandler : MonoBehaviour
         if (this.currentState == State.SelectingFakeSplit)
         {
             FakeUnit templateUnit;
-            if (this.currentPlayer == Team.Green)
+            if (this.currentPlayerTeam == Team.Green)
             {
                 templateUnit = this.greenFakeTemplateUnit;
             }
-            else if (this.currentPlayer == Team.Red)
+            else if (this.currentPlayerTeam == Team.Red)
             {
                 templateUnit = this.redFakeTemplateUnit;
             }
             else
             {
-                throw new Exception("Team " + this.currentPlayer + " has no given template for units");
+                throw new Exception("Team " + this.currentPlayerTeam + " has no given template for units");
             }
             Order order = new Split(this.initiator, this.initiatedTile,
-                this.splitMovingTile, this.playerList[this.currentPlayerIndex], templateUnit, !isMovingFake);
+                this.splitMovingTile, this.currentPlayer(), templateUnit, !isMovingFake);
             this.playOrder(order);
-            this.playerList[this.currentPlayerIndex].consolidate();
+            this.currentPlayer().consolidate();
         }
         else
         {
@@ -382,18 +391,18 @@ public class InputHandler : MonoBehaviour
     void nextTurn()
     {
         this.playerList[currentPlayerIndex].showCards(false);
-        switch (this.currentPlayer) 
+        switch (this.currentPlayerTeam) 
         { 
             case Team.Green:
-                this.currentPlayer = Team.Red;
+                this.currentPlayerTeam = Team.Red;
                 this.currentPlayerIndex += 1;
-                nextTurnButton.appear(this.currentPlayer, this.boardState() * -1);
+                nextTurnButton.appear(this.currentPlayerTeam, this.boardState() * -1);
                 break;
             case Team.Red:
-                this.currentPlayer = Team.Green;
+                this.currentPlayerTeam = Team.Green;
                 turnNumber += 1;
                 this.currentPlayerIndex = 0;
-                nextTurnButton.appear(this.currentPlayer, this.boardState());
+                nextTurnButton.appear(this.currentPlayerTeam, this.boardState());
                 break;
             default:
                 throw new Exception("Error, invalid state for current team reached");

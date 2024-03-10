@@ -49,6 +49,10 @@ public class Tile : MonoBehaviour
     //EFFECT: given whether it should light the tile or not, does so
     public void lightTile(bool shouldLight)
     {
+        if(shouldLight) 
+        {
+            Debug.Log(this.name);
+        }
         this.litTile.SetActive(shouldLight);
         this.isLit = shouldLight;
     }
@@ -61,6 +65,7 @@ public class Tile : MonoBehaviour
             tile.lightTile(shouldLight);
         }
     }
+
     //EFFECT: Adds the given unit to one of the locations
     public void addUnit(Unit unit)
     {
@@ -74,6 +79,18 @@ public class Tile : MonoBehaviour
 
         unit.moveTo(this);
     }
+
+    //Returns the type of the units on the tile. If there is more than one
+    //or no units on the tile, returns a UnitType.None
+    public UnitType unitType() 
+    {
+        if (this.units.Count != 1) 
+        {
+            return UnitType.None;
+        }
+        return this.units[0].type;
+    }
+    //Gets the first unit off of the tile
 
     //Given a team, attempts to change the team of the tile
     //note, due to how the game is played, the teams cannot swap immediantly from

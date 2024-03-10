@@ -12,7 +12,8 @@ public enum UnitType
     Marine,
     Destroyer,
     Cruiser,
-    Submarine
+    Submarine,
+    None,
 }
 
 
@@ -335,6 +336,11 @@ public class Unit : MonoBehaviour
         } 
         this.health += u.health;
         this.MAXHEALTH += u.MAXHEALTH;
+        if (!this.hasFake && u.hasFake) 
+        {
+            this.fake = u.fake;
+            this.fake.setParentUnit(this);
+        }
         return true;
     }
 

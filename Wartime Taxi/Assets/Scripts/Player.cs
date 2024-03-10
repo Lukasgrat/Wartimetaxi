@@ -83,6 +83,20 @@ public class Player
         }
     }
 
+    //Returns if this player has any fake units associate with it
+    public bool containsFake() 
+    {
+        foreach(Unit u in this.units) 
+        {
+            if (!u.isReal()) 
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     //Returns the list of tiles of this player where units can shoot the given units
     public List<Tile> canMoveFrom()
     {
