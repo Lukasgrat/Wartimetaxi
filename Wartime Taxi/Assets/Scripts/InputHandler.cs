@@ -15,6 +15,7 @@ public class InputHandler : MonoBehaviour
     Team currentPlayerTeam = Team.Green;
     int currentPlayerIndex = 0;
     [SerializeField]
+    GameObject tileHolder;
     List<Tile> tiles;
     List<Player> playerList;
     int MAXCARDCOUNT = 6;
@@ -92,6 +93,14 @@ public class InputHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        this.tiles = new List<Tile>();
+        for (int x = 0; x < tileHolder.transform.childCount; x += 1)
+        {
+            if (tileHolder.transform.GetChild(x).TryGetComponent(out Tile t)) 
+            {
+                this.tiles.Add(t);
+            }
+        }
         this.cam = Camera.main;
         playerList = new List<Player>();
         STARTINGDRAW = cards.transform.position;
@@ -130,16 +139,22 @@ public class InputHandler : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = 100;
         mousePos = cam.ScreenToWorldPoint(mousePos);
-        if (Input.GetMouseButtonDown(0))
+        if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0))
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100))
+            RaycastHit[] hits = Physics.RaycastAll(ray, 100f);
+            bool hasLightenTile = false;
+            foreach (RaycastHit hit in hits)
             {
-                if (hit.transform.gameObject.TryGetComponent(out Tile t))
+                if (hit.transform.gameObject.TryGetComponent(out Tile t) && t.isLighten())
                 {
+                    hasLightenTile = true;
                     this.SelectionHandler(t);
                 }
+            }
+            if (!hasLightenTile) 
+            {
+                this.resetState();
             }
         }
         else 
@@ -273,7 +288,7 @@ public class InputHandler : MonoBehaviour
     }
     
     //Given a number, readies to split off that many units when the next tile is selected
-    public void numberSelcted(int num) 
+    public void numberSelcted(int num)
     {
         if (this.currentState == State.SelectedTile2Split)
         {

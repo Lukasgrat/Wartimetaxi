@@ -49,10 +49,6 @@ public class Tile : MonoBehaviour
     //EFFECT: given whether it should light the tile or not, does so
     public void lightTile(bool shouldLight)
     {
-        if(shouldLight) 
-        {
-            Debug.Log(this.name);
-        }
         this.litTile.SetActive(shouldLight);
         this.isLit = shouldLight;
     }
