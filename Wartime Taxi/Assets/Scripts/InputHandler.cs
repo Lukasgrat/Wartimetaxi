@@ -433,6 +433,7 @@ public class InputHandler : MonoBehaviour
         Debug.Log(possibleWinner);
         if (possibleWinner != -1) 
         {
+            Debug.Log(this.playerList.Count);
             this.winningScript.declareWinner(this.playerList[possibleWinner]);
         }
         this.playerList[currentPlayerIndex].repairAll();

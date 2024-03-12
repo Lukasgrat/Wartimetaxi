@@ -27,5 +27,6 @@ public class WinningScript : MonoBehaviour
         {
             throw new System.Exception("Error, player's team is not accounted for when declaring winner");
         }
+        this.winDisplay.SetActive(true);
     }
 }

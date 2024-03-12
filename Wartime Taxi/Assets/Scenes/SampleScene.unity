@@ -2284,7 +2284,7 @@ MonoBehaviour:
   redFakeTemplateUnit: {fileID: 66277821354447347, guid: da7740a9475e805439971cd8cd26ec89, type: 3}
   fakeButton: {fileID: 1713084149}
   winningConditions: {fileID: 566538863}
-  winningScript: {fileID: 0}
+  winningScript: {fileID: 572626001}
 --- !u!1 &214546636
 GameObject:
   m_ObjectHideFlags: 0
