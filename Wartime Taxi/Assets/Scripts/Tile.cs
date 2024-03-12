@@ -1,4 +1,3 @@
-using Palmmedia.ReportGenerator.Core.Reporting.Builders;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -39,6 +38,12 @@ public class Tile : MonoBehaviour
 
     }
 
+
+    //Returns whether this tile has the same team as the given team
+    public bool sameTeam(Team team) 
+    { 
+        return this.team == team;
+    }
 
     //Returns whether this tile is lit or not
     public bool isLighten()

@@ -32,6 +32,25 @@ public class Player
             card.gameObject.SetActive(shouldShow);
         }
     }
+
+    //Returns if this player controls the given tile
+    public bool controlsTile(Tile t) 
+    {
+        return t.sameTeam(this.team);
+    }
+
+    //Returns the amount of units this player has left
+    public int unitCount() 
+    {
+        return this.units.Count;
+    }
+
+    //Returns if this player is of the given team
+    public bool sameTeam(Team team) 
+    {
+        return this.team == team;
+    }
+
     //Returns whether this player can draw a card given the current maximum
     public bool canDrawCard(int maxCards)
     {

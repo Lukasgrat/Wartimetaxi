@@ -70,6 +70,12 @@ public class InputHandler : MonoBehaviour
 
     [SerializeField]
     FakeButton fakeButton;
+
+
+    [SerializeField]
+    WinningConditions winningConditions;
+    [SerializeField]
+    WinningScript winningScript; 
     enum State 
     { 
         Idle,
@@ -416,15 +422,27 @@ public class InputHandler : MonoBehaviour
             case Team.Red:
                 this.currentPlayerTeam = Team.Green;
                 turnNumber += 1;
+                this.winningConditions.updateStandings(this.playerList);
                 this.currentPlayerIndex = 0;
                 nextTurnButton.appear(this.currentPlayerTeam, this.boardState());
                 break;
             default:
                 throw new Exception("Error, invalid state for current team reached");
         }
+        int possibleWinner = this.winningConditions.hasMet(this.playerList);
+        Debug.Log(possibleWinner);
+        if (possibleWinner != -1) 
+        {
+            this.winningScript.declareWinner(this.playerList[possibleWinner]);
+        }
         this.playerList[currentPlayerIndex].repairAll();
         this.playerList[currentPlayerIndex].showCards(true);
         this.changeActions(this.MAXACTIONS);
+
+        if (this.currentPlayer().unitCount() == 0)
+        {
+            this.nextTurn();
+        }
     }
 
     //returns the player whose turn its not
