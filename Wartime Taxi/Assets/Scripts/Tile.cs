@@ -204,6 +204,8 @@ public class Tile : MonoBehaviour
         }
         return moveableUnits;
     }
+
+
     //EFFECT: Given a Selection handler, highlights all unit buttons that can be used
     public void activateMoveableUnits(SelectionHandler handler) 
     { 
@@ -340,5 +342,20 @@ public class Tile : MonoBehaviour
             }
         }
         return true;
+    }
+
+
+    //Returns the list of tiles that the given unit can move from, assuming they are on this tile
+    public List<Tile> movementOptions(Unit u) 
+    {
+        List<Tile> returnTiles = new List<Tile> ();
+        foreach (Tile t in this.adjacentTiles) 
+        {
+            if (t.canMove(u, this))
+            {
+                returnTiles.Add(t);
+            }
+        }
+        return returnTiles;
     }
 }

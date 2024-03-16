@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-interface Order
+public interface Order
 {
     bool isValid();
     void playCard();
 
     int value();
+
+    CardType getType();
 }
 
 class Move : Order {
@@ -39,9 +41,14 @@ class Move : Order {
         }
     }
 
+    public CardType getType() 
+    {
+        return CardType.Move;
+    }
+
     public int value()
     {
-        return 0;
+        return 6;
     }
 }
 
@@ -84,7 +91,13 @@ class Shoot : Order
 
     public int value()
     {
-        return 0;
+        return 10;
+    }
+
+
+    public CardType getType()
+    {
+        return CardType.Shoot;
     }
 }
 
@@ -166,7 +179,13 @@ class Split : Order
 
     public int value() 
     {
-        return 0;
+        return 1;
+    }
+
+
+    public CardType getType()
+    {
+        return CardType.Split;
     }
 }
 

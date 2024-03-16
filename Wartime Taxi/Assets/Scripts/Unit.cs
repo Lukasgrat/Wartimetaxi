@@ -37,21 +37,49 @@ public class Unit : MonoBehaviour
     internal int MAXHEALTH = 4;
     FakeUnit fake;
     internal bool hasFake = false;
+
+
+    Player player;
     // Start is called before the first frame update
     void Start()
     {
         location.addUnit(this);
     }
+
+
     //Creates a new Unit
-    public void resetUnit(Tile location, int MAXHEALTH, UnitType type, Team team) 
+    public void resetUnit(Tile location, int MAXHEALTH, UnitType type, Team team, Player p) 
     {
         this.location = location;
         this.MAXHEALTH = MAXHEALTH;
         this.type = type;
         this.team = team;
         health = MAXHEALTH;
+        this.player = null;
+        this.setPlayer(p);
     }
-   
+
+    //sets the given player(can only be done once)
+    public void setPlayer(Player p)
+    {
+        if (this.player != null) 
+        {
+            throw new Exception("Cannot alter player after set");
+        }
+        this.player = p;
+    }
+
+    //returns the associated player of this unit
+    public Player getPlayer() 
+    {
+        if (this.player == null) 
+        {
+            throw new Exception("Error, the player has not been set for unit" + this.gameObject.name);
+        }
+        return this.player;
+    }
+
+
     //returns whether this unit has the same team as the given team
 
     public bool sameTeam(Team team) { return this.team == team; }
@@ -104,13 +132,6 @@ public class Unit : MonoBehaviour
     { 
         return this.type == UnitType.Marine || this.type == UnitType.Airbase;
     }
-
-    //EFFECT: Highlights the tile associated  with this unit
-    public void hightLightTile() 
-    {
-        this.location.lightTile(true);
-    }
-
 
     //Returns whether this unit can hit that unit
 
@@ -207,11 +228,6 @@ public class Unit : MonoBehaviour
         return this.health - damage > 0;
     }
 
-    public bool hasFakeUnit() 
-    { 
-        return this.hasFake;
-    }
-
     //Returns the display string for this unit, given which team is asking
     //if its the enemy team, it will not say if its real or fake
     public virtual string displayString(Team team) 
@@ -233,7 +249,7 @@ public class Unit : MonoBehaviour
         this.location.removeUnit(this);
     }
 
-    //EFFECT: Returns if this unit can off of the given tile to any of the other tiles
+    // Returns if this unit can off of the given tile to any of the other tiles
     public bool canMoveOffOf(Tile tile, List<Tile> adjacentTiles)
     {
         foreach (Tile t in adjacentTiles)
@@ -244,6 +260,28 @@ public class Unit : MonoBehaviour
             }
         }
         return false;
+    }
+
+
+    //Returns all the tiles this unit can move to 
+    public List<Tile> movements() 
+    {
+        List<Tile> tiles = this.location.movementOptions(this);
+        return tiles;
+    }
+
+    //Returns all units this unit can shoot at, given the enemy list of units
+    public List<Unit> possibleShots(List<Unit> units) 
+    {
+        List<Unit> returnUnits = new List<Unit>();
+        foreach(Unit that in units)
+        {
+            if (this.canShoot(that)) 
+            {
+                returnUnits.Add(that);
+            }
+        }
+        return returnUnits;
     }
 
     //Updates the maximum health of this unit to meet in line with the standard maximum
@@ -282,7 +320,7 @@ public class Unit : MonoBehaviour
         }
         this.health -= health;
         this.MAXHEALTH -= health;
-        templateUnit.resetUnit(tile, health, this.type, this.team);
+        templateUnit.resetUnit(tile, health, this.type, this.team, this.player);
     }
 
     //Splits this unit to alter the given one with the given health and Tile,
@@ -291,13 +329,13 @@ public class Unit : MonoBehaviour
     {
         if (shouldSwapPlaces)
         {
-            templateUnit.resetUnit(this.location, this.health, this.type, this.team);
+            templateUnit.resetUnit(this.location, this.health, this.type, this.team, this.player);
             Order moveOrder = new Move(this.location, tile, this);
             moveOrder.playCard();
         }
         else 
         {
-            templateUnit.resetUnit(tile, this.health, this.type, this.team);
+            templateUnit.resetUnit(tile, this.health, this.type, this.team, this.player);
         }
     }
 
@@ -308,16 +346,26 @@ public class Unit : MonoBehaviour
         return true; 
     }
 
+    //Returns the possible healths this unit can split off of
+    public List<int> possibleHealthSplits()
+    {
+        List<int> returnList= new List<int>();
+        if (!this.isReal()) 
+        {
+            return returnList;
+        }
+        for (int x = this.health - 1; x > 1; x -= 1) 
+        {
+            returnList.Add(x);
+        }
+        return returnList;
+    }
+
+
     //Returns the sum of the given maximum health and this unit's max health
     public int addMaxHealthTo(int max) 
     { 
         return this.MAXHEALTH + max;
-    }
-
-    //Returns the sum of the given health and this unit's health
-    public int addHealthTo(int health)
-    {
-        return this.health + health;
     }
 
     //EFFECT increases this unit's maximum health and
@@ -348,6 +396,25 @@ public class Unit : MonoBehaviour
     {
         return this.location == that.location;
     }
+
+    //Makes a move order out of the given next tile to move to
+
+    public Order makeMoveOrder(Tile nextTile) 
+    {
+        return new Move(this.location, nextTile, this);
+    }
+
+    //Makes a fake split order out of the given health, nexttile, swapping, and respective templates
+    public Order makeFakeSplitOrder(Tile nextTile, Player p, FakeUnit unit, bool shouldSwapPlaces) 
+    {
+        return new Split(this, this.location, nextTile, p, unit, shouldSwapPlaces);
+    }
+
+    public Order makeSplitOrder(Tile nextTile, Player p, int health, Unit unit) 
+    {
+        return new Split(this, this.location, nextTile, p, health, unit);
+    }
+
 
  
     //Self destructs this unit if its a fake unit

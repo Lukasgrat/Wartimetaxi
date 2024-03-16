@@ -10,9 +10,18 @@ public class SceneChangeButton : MonoBehaviour
     Button selfButton;
     [SerializeField]
     int scene;
+    [SerializeField]
+    string prefChanged;
+    [SerializeField]
+    int value;
     // Start is called before the first frame update
     void Start()
     {
-        selfButton.onClick.AddListener(delegate { SceneManager.LoadScene(scene); });
+        selfButton.onClick.AddListener(delegate {
+            if (prefChanged.Equals("AI"))
+            {
+                PlayerPrefs.SetInt(prefChanged, value);
+            }
+            SceneManager.LoadScene(scene); });
     }
 }

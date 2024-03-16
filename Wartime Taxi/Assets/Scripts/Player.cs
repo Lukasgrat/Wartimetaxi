@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.UI.Image;
 using UnityEngine.UIElements;
+using System.Linq;
 
 public class Player
 {
@@ -100,6 +101,87 @@ public class Player
                 x -= 1;
             }
         }
+    }
+
+    //Returns all possible actions this player can perform,
+    //given the maximum number of cards, and where to store cards
+    public List<Action> possibleActions(int maxCards, GameObject parent, Player enemy, FakeUnit fakeTemplateUnit, Unit templateUnit) 
+    {
+        List<Action> actions = new List<Action>();
+        if (this.canDrawCard(maxCards))
+            actions.Add(new DrawCard(this, parent));
+
+        bool hasShoot = false;
+        bool hasSplit = false;
+        bool hasMove = false;
+        foreach (Card c in this.deck) 
+        {
+            if (c.sameType(CardType.Move))
+            {
+                hasMove = true;
+            }
+            else if (c.sameType(CardType.Split))
+            {
+                hasSplit = true;
+            }
+            else if (c.sameType(CardType.Shoot)) 
+            {
+                hasShoot = true;
+            }
+        }
+        if (hasShoot) 
+        {
+            actions.Add(new Discard(CardType.Shoot, this));
+            foreach (Unit u in this.units) 
+            {
+                foreach (Unit vunerable in u.possibleShots(enemy.units)) 
+                {
+                    Debug.Log(vunerable.gameObject.name);
+                    actions.Add(new OrderAction(new Shoot(u, vunerable, enemy), this));
+                }
+            }
+        }
+        if (hasSplit)
+        {
+            actions.Add(new Discard(CardType.Split, this));
+            foreach (Unit u in this.units) 
+            {
+                foreach (Tile t in u.movements())
+                {
+                    if (u.type == UnitType.Submarine && !this.containsFake())
+                    {
+                        actions.Add(new OrderAction(
+                            u.makeFakeSplitOrder(t, this, fakeTemplateUnit, true), 
+                            this));
+                        actions.Add(new OrderAction(
+                            u.makeFakeSplitOrder(t, this, fakeTemplateUnit, false), 
+                            this));
+                    }
+                    else
+                    {
+                        foreach (int health in u.possibleHealthSplits())
+                        {
+                            actions.Add(new OrderAction(
+                                u.makeSplitOrder(t, this, health, templateUnit),
+                                this));
+                        }
+                    }
+
+                }
+            }
+        }
+        if (hasMove)
+        {
+            actions.Add(new Discard(CardType.Move, this));
+            foreach(Unit u in this.units) 
+            {
+                foreach (Tile t in u.movements()) 
+                {
+                    actions.Add(new OrderAction(u.makeMoveOrder(t), this));
+                }
+            }
+        }
+        return actions;
     }
 
     //Returns if this player has any fake units associate with it
@@ -239,4 +321,7 @@ public class Player
             }
         }
     }
+
+    //Returns all possible moves the player can make in this state
+
 }

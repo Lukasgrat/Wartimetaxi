@@ -16,10 +16,9 @@ public class Card : MonoBehaviour
     [SerializeField]
     CardType cardType;
     public InputHandler inputHandler;
-    public Card(CardType cardType, InputHandler inputHandler)
-    {
-        this.cardType = cardType;
-    }
+
+    [SerializeField]
+    Button discardCard;  
 
     public void setInputHandler(InputHandler inputHandler)
     {
@@ -35,6 +34,7 @@ public class Card : MonoBehaviour
     void Start()
     {
         this.gameObject.transform.GetChild(0).gameObject.GetComponent<Button>().onClick.AddListener(delegate { this.selectCard(); });
+        this.discardCard.onClick.AddListener(delegate { this.inputHandler.discardCard(this.cardType);  });
     }
     //activates this card
     void selectCard()

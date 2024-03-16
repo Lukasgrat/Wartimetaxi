@@ -2,6 +2,8 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -34,16 +36,16 @@ public class InputHandler : MonoBehaviour
     [SerializeField]
     NumberSelector numberSelector;
     CardType selectedCard = CardType.None;
-    
+
 
 
     Unit initiator;
     Tile initiatedTile;
     Tile splitMovingTile;
     Tile target;
-    
-    
-    
+
+
+
     [SerializeField]
     GameObject unitInfo;
     [SerializeField]
@@ -75,9 +77,11 @@ public class InputHandler : MonoBehaviour
     [SerializeField]
     WinningConditions winningConditions;
     [SerializeField]
-    WinningScript winningScript; 
-    enum State 
-    { 
+    WinningScript winningScript;
+
+    bool AI = false;
+    enum State
+    {
         Idle,
 
         SelectedMove,
@@ -88,7 +92,7 @@ public class InputHandler : MonoBehaviour
         SelectedTile1Shoot,
         SelectedUnit1Shoot,
         SelectedTile2Shoot,
-        
+
         SelectedSplit,
         SelectedTile1Split,
         SelectedUnit1Split,
@@ -99,10 +103,14 @@ public class InputHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (PlayerPrefs.GetInt("AI", 0) == 1) 
+        {
+            this.AI = true;
+        }
         this.tiles = new List<Tile>();
         for (int x = 0; x < tileHolder.transform.childCount; x += 1)
         {
-            if (tileHolder.transform.GetChild(x).TryGetComponent(out Tile t)) 
+            if (tileHolder.transform.GetChild(x).TryGetComponent(out Tile t))
             {
                 this.tiles.Add(t);
             }
@@ -111,7 +119,7 @@ public class InputHandler : MonoBehaviour
         playerList = new List<Player>();
         STARTINGDRAW = cards.transform.position;
         playerList.Add(new Player(Team.Green, STARTINGDRAW, cardGenerator));
-        for (int i = 0; i < this.startingCardCount; i++) 
+        for (int i = 0; i < this.startingCardCount; i++)
         {
             this.playerList[0].drawCard(this.cards);
         }
@@ -123,13 +131,13 @@ public class InputHandler : MonoBehaviour
         this.playerList[1].showCards(false);
         for (int x = 0; x < units.transform.childCount; x++)
         {
-            if (units.transform.GetChild(x).TryGetComponent<Unit>(out Unit u))
+            if (units.transform.GetChild(x).TryGetComponent(out Unit u))
             {
                 if (u.sameTeam(Team.Green))
                 {
                     this.playerList[0].addUnit(u);
                 }
-                else if(u.sameTeam(Team.Red)) 
+                else if (u.sameTeam(Team.Red))
                 {
                     this.playerList[1].addUnit(u);
                 }
@@ -158,12 +166,12 @@ public class InputHandler : MonoBehaviour
                     this.SelectionHandler(t);
                 }
             }
-            if (!hasLightenTile) 
+            if (!hasLightenTile)
             {
                 this.resetState();
             }
         }
-        else 
+        else
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             bool madeActive = false;
@@ -181,7 +189,7 @@ public class InputHandler : MonoBehaviour
                     {
                         this.unitInfoText.color = Color.red;
                     }
-                    else 
+                    else
                     {
                         this.unitInfoText.color = Color.white;
                     }
@@ -193,12 +201,12 @@ public class InputHandler : MonoBehaviour
             this.unitInfo.SetActive(madeActive);
         }
     }
-    void drawCard() 
+    void drawCard()
     {
-        if (this.actionsLeft != 0) { 
+        if (this.actionsLeft != 0) {
             EventSystem.current.SetSelectedGameObject(null);
             Player player = this.currentPlayer();
-            if (player.canDrawCard(this.MAXCARDCOUNT)) 
+            if (player.canDrawCard(this.MAXCARDCOUNT))
             {
                 player.drawCard(this.cards);
                 this.changeActions(this.actionsLeft - 1);
@@ -219,7 +227,7 @@ public class InputHandler : MonoBehaviour
         {
             resetState();
         }
-        else if ( this.currentState == State.SelectedMove)
+        else if (this.currentState == State.SelectedMove)
         {
 
             this.currentState = State.SelectedTile1Move;
@@ -244,7 +252,7 @@ public class InputHandler : MonoBehaviour
             this.currentState = State.SelectedTile2Shoot;
             t.activateVunerableUnits(this.selectionHandler, initiator);
         }
-        else if (this.currentState == State.SelectedSplit) 
+        else if (this.currentState == State.SelectedSplit)
         {
             this.currentState = State.SelectedTile1Split;
             t.activateMoveableUnits(this.selectionHandler);
@@ -278,8 +286,42 @@ public class InputHandler : MonoBehaviour
     {
         this.changeActions(this.actionsLeft - 1);
         order.playCard();
-        this.currentPlayer().removeCard(this.selectedCard);
+        this.removeCard(this.selectedCard);
         this.resetState();
+    }
+
+    //Discards the given card
+    public void discardCard(CardType cardType) 
+    {
+        this.changeActions(this.actionsLeft - 1);
+        this.resetState();
+        this.removeCard(cardType);
+    }
+
+    //Removes the card of the given type from the current player's hand
+    public void removeCard(CardType cardType)
+    {
+        this.currentPlayer().removeCard(cardType);
+    }
+
+    //Removes the card of the given type from the given team player's hand
+    public void removeCard(CardType cardType, Team team)
+    {
+
+        this.playerList[this.getPlayerIndex(team)].removeCard(cardType);
+    }
+
+    //Returns the index of the player given the Team, returnning negative 1 if none are found
+    int getPlayerIndex(Team team) 
+    {
+        for (int x = 0; x < this.playerList.Count; x += 1) 
+        {
+            if (this.playerList[x].sameTeam(team)) 
+            {
+                return x;
+            }
+        }
+        return -1;
     }
 
     //EFFECT: Resets the built up state from a move
@@ -418,6 +460,11 @@ public class InputHandler : MonoBehaviour
                 this.currentPlayerTeam = Team.Red;
                 this.currentPlayerIndex += 1;
                 nextTurnButton.appear(this.currentPlayerTeam, this.boardState() * -1);
+                if (this.AI)
+                {
+                    nextTurnButton.gameObject.SetActive(false);
+                    this.AIRun();
+                }
                 break;
             case Team.Red:
                 this.currentPlayerTeam = Team.Green;
@@ -430,7 +477,6 @@ public class InputHandler : MonoBehaviour
                 throw new Exception("Error, invalid state for current team reached");
         }
         int possibleWinner = this.winningConditions.hasMet(this.playerList);
-        Debug.Log(possibleWinner);
         if (possibleWinner != -1) 
         {
             Debug.Log(this.playerList.Count);
@@ -508,4 +554,100 @@ public class InputHandler : MonoBehaviour
     {
         return 0;
     }
+
+
+
+    //Autoruns the current player's turn through AI logic
+    void AIRun() 
+    {
+        this.resetState();
+        FakeUnit currentFake;
+        Unit currentUnit;
+        if (this.currentPlayer().sameTeam(Team.Red))
+        {
+            currentFake = this.redFakeTemplateUnit;
+            currentUnit = this.redTemplateUnit;
+        }
+        else if (this.currentPlayer().sameTeam(Team.Green))
+        {
+            currentFake = this.greenFakeTemplateUnit;
+            currentUnit = this.greenTemplateUnit;
+        }
+        else 
+        {
+            throw new Exception("Team not accounted for in AI");
+        }
+        List<Action> list = this.currentPlayer().
+            possibleActions(this.MAXCARDCOUNT, this.cards, this.opposingPlayer(), currentFake, currentUnit)
+            .OrderBy(x => Guid.NewGuid()).ToList();
+
+        this.quicksort(list);
+        list[0].PlayMove();
+
+        List<Action> list2 = this.currentPlayer().
+           possibleActions(this.MAXCARDCOUNT, this.cards, this.opposingPlayer(), currentFake, currentUnit)
+           .OrderBy(x => Guid.NewGuid()).ToList();
+
+        this.quicksort(list2);
+        list2[0].PlayMove();
+        this.nextTurn();
+    }
+
+    //Swaps two elements in a list
+    void swap<T>(List<T> x, int index1, int index2) 
+    {
+        T item = x[index1];
+        x[index1] = x[index2];
+        x[index2] = item;
+    }
+    // Returns the index where the pivot element ultimately ends up in the sorted source
+    // EFFECT: Modifies the source list in the range [loIdx, hiIdx) such that
+    //         all values to the left of the pivot are less than (or equal to) the pivot
+    //         and all values to the right of the pivot are greater than it
+    int partition(List<Action> source, int loIdx, int hiIdx, int pivot)
+        {
+            int curLo = loIdx;
+            int curHi = hiIdx - 1;
+            while (curLo < curHi)
+            {
+                // Advance curLo until we find a too-big value (or overshoot the end of the list)
+                while (curLo < hiIdx && source[curLo].value() >=  pivot)
+                {
+                    curLo = curLo + 1;
+                }
+                // Advance curHi until we find a too-small value (or undershoot the start of the list)
+                while (curHi >= loIdx && source[curHi].value() < pivot)
+                {
+                    curHi = curHi - 1;
+                }
+                if (curLo < curHi)
+                {
+                    swap(source, curLo, curHi);
+                }
+            }
+            swap(source, loIdx, curHi); // place the pivot in the remaining spot
+            return curHi;
+        }
+    // In ArrayUtils
+    // EFFECT: Sorts the given ArrayList according to the given comparator
+    void quicksort(List<Action> arr)
+    {
+        quicksortHelp(arr, 0, arr.Count);
+    }
+
+    // EFFECT: sorts the source array according to comp, in the range of indices [loIdx, hiIdx)
+    void quicksortHelp(List<Action> source, int loIdx, int hiIdx)
+    {
+        if (loIdx >= hiIdx)
+        {
+            return;
+        }
+        int pivot = source[loIdx].value();
+        int pivotIdx = partition(source, loIdx, hiIdx, pivot);
+        // Step 3: sort both halves of the list
+        quicksortHelp(source, loIdx, pivotIdx);
+        quicksortHelp(source, pivotIdx + 1, hiIdx);
+    }
+
+    
 }
