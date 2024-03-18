@@ -174,12 +174,12 @@ public class Unit : MonoBehaviour
                 return this.type != UnitType.Destroyer;
             case (UnitType.Cruiser):
                 return this.type == UnitType.Airbase ||
-                    this.type == UnitType.Marine;
+                    this.type == UnitType.Marine ||
+                    this.type == UnitType.Destroyer;
             case (UnitType.Destroyer):
                 return this.type == UnitType.Submarine;
             case (UnitType.Submarine):
-                return this.type == UnitType.Cruiser ||
-                    this.type == UnitType.Destroyer;
+                return this.type == UnitType.Cruiser;
         }
         throw new System.Exception("Missing case for:" + ut);
     }
@@ -444,5 +444,13 @@ public class Unit : MonoBehaviour
         {
             throw new Exception("Error: attempted to retrieve non-existant fake unit from" + this.name);
         }
+    }
+
+
+
+    //Returns if this unit is on the given location
+    public bool onLocation(Tile t)
+    {
+        return this.location == t;
     }
 }

@@ -7,9 +7,9 @@ using UnityEngine.UI;
 public class WinningConditions : MonoBehaviour
 {
     [SerializeField]
-    Button continueButton;
+    internal Button continueButton;
     [SerializeField]
-    Image displayConditions;
+    internal Image displayConditions;
     [SerializeField]
     TextMeshProUGUI turnText;
     [SerializeField]
@@ -34,7 +34,7 @@ public class WinningConditions : MonoBehaviour
     }
 
     //returns the count of the player who won. If no one has, return -1
-    public int hasMet(List<Player> players)
+    public virtual int hasMet(List<Player> players)
     {
         if (this.turnsLeft == 0)
         {
@@ -82,7 +82,7 @@ public class WinningConditions : MonoBehaviour
 
     //Changes the conditions based on the current circumstances
     //given the list of players
-    public void updateStandings(List<Player> players) 
+    public virtual void updateStandings(List<Player> players) 
     {
         int currentController = this.controlsTiles(players);
         if (currentController == -1)

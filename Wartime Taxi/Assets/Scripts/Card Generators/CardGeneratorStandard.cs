@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardGenerator : MonoBehaviour
+public class CardGeneratorStandard : CardGenerator
 {
 
     [SerializeField]
@@ -13,7 +13,7 @@ public class CardGenerator : MonoBehaviour
     Card splitCard;
     [SerializeField]
     InputHandler inputHandler;
-    public Card generateCard() 
+    public override Card generateCard() 
     {
         int num = Random.Range(0, 10);
         if (num < 4)

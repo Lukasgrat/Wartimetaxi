@@ -15,7 +15,7 @@ public class NumberSelector : MonoBehaviour
         for (int x = 0; x < buttons.Count; x += 1) 
         {
             int y = x;
-            buttons[x].onClick.AddListener(delegate { this.inputHandler.numberSelcted(y + 1); });
+            buttons[x].onClick.AddListener(delegate { this.inputHandler.numberSelected(y + 1); });
         }
     }
 

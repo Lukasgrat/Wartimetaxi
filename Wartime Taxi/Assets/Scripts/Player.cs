@@ -136,7 +136,6 @@ public class Player
             {
                 foreach (Unit vunerable in u.possibleShots(enemy.units)) 
                 {
-                    Debug.Log(vunerable.gameObject.name);
                     actions.Add(new OrderAction(new Shoot(u, vunerable, enemy), this));
                 }
             }
@@ -321,7 +320,4 @@ public class Player
             }
         }
     }
-
-    //Returns all possible moves the player can make in this state
-
 }
