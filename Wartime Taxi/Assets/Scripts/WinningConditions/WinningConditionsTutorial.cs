@@ -26,7 +26,7 @@ public class WinningConditionsTutorial : WinningConditions
     //returns the count of the player who won. If no one has, return -1
     public override int hasMet(List<Player> players)
     { 
-        if(this.tutorialText.currentPhase() == 12345) { return 0; }
+        if(this.tutorialText.currentPhase() == -1) { return 0; }
         return -1;
     }
     //Changes the conditions based on the current circumstances

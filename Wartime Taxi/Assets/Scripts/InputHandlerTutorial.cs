@@ -111,6 +111,11 @@ public class InputHandlerTutorial : InputHandler
             }
             this.unitInfo.SetActive(madeActive);
         }
+        int possibleWinner = this.winningConditions.hasMet(this.playerList);
+        if (possibleWinner != -1)
+        {
+            this.winningScript.declareWinner(this.playerList[possibleWinner]);
+        }
     }
     internal new void drawCard()
     {
@@ -173,7 +178,7 @@ public class InputHandlerTutorial : InputHandler
     public override void startSplit()
     { 
         this.resetState();
-        if (this.actionsLeft != 0 && this.tutorialText.currentPhase() > 11) 
+        if (this.actionsLeft != 0 && this.tutorialText.currentPhase() > 13) 
         {
             this.selectedCard = CardType.Split;
             this.currentState = State.SelectedSplit;

@@ -26,6 +26,10 @@ public class TutorialText : MonoBehaviour
     Tile northwestApproach;
     [SerializeField]
     Unit enemyDestroyer;
+    [SerializeField]
+    Tile airbase;
+    [SerializeField]
+    Unit redMarine;
     
     int startingText = 0;
     int currentText = 0;
@@ -105,6 +109,32 @@ public class TutorialText : MonoBehaviour
             {
                 this.blockedConditions.RemoveAt(0);
             }
+            else if (this.blockedConditions[0] == 13
+                && !this.InputHandler.currentPlayer().canDrawCard(3))
+            {
+                this.blockedConditions.RemoveAt(0);
+            }
+            else if (this.blockedConditions[0] == 17
+                && this.InputHandler.currentPlayer().containsFake())
+            {
+                this.blockedConditions.RemoveAt(0);
+            }
+            else if (this.blockedConditions[0] == 20
+                && this.InputHandler.currentPlayer().unitCount() == 5) 
+            {
+                this.blockedConditions.RemoveAt(0);
+            }
+            else if (this.blockedConditions[0] == 24
+                && this.airbase.unitType() == UnitType.Airbase) 
+            {
+                this.blockedConditions.RemoveAt(0);
+            }
+            else if (this.blockedConditions[0] == 25 
+                && !this.redMarine.canSurviveShot(3))
+            {
+                this.blockedConditions.RemoveAt(0);
+            }
+
         }
     }
 

@@ -3589,129 +3589,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 490311721}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &515816511
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 515816512}
-  - component: {fileID: 515816516}
-  - component: {fileID: 515816515}
-  - component: {fileID: 515816514}
-  - component: {fileID: 515816513}
-  m_Layer: 0
-  m_Name: GRN Destroyer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &515816512
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 515816511}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.12, z: 2.38}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1546207935}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &515816513
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 515816511}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8cbfb4704855041b344b8dadabb009, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  location: {fileID: 535361551}
-  type: 2
-  team: 0
-  health: 4
-  MAXHEALTH: 4
---- !u!65 &515816514
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 515816511}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &515816515
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 515816511}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: f0811426d15e99c4aa026ee36faff692, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &515816516
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 515816511}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &520393392
 GameObject:
   m_ObjectHideFlags: 0
@@ -4963,8 +4840,8 @@ Transform:
   m_GameObject: {fileID: 744411461}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.2835, y: -0.6399994, z: -0.95519876}
-  m_LocalScale: {x: 10.045382, y: 1, z: 11.779027}
+  m_LocalPosition: {x: 10.5347, y: -0.6399994, z: 2.828}
+  m_LocalScale: {x: 22.547865, y: 1, z: 19.345875}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 800611822}
@@ -6962,6 +6839,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
   m_PrefabInstance: {fileID: 944479079}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &944479081 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2198003112052303894, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
+  m_PrefabInstance: {fileID: 944479079}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a8cbfb4704855041b344b8dadabb009, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &945761385
 GameObject:
   m_ObjectHideFlags: 0
@@ -10796,14 +10684,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 515816512}
   - {fileID: 135541554}
   - {fileID: 745787907}
   - {fileID: 1982392280}
   - {fileID: 944479080}
   - {fileID: 2128038994}
-  - {fileID: 1557661599}
-  - {fileID: 2091778461}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1546434697
@@ -10839,76 +10724,6 @@ Transform:
   - {fileID: 322713858}
   m_Father: {fileID: 750348191}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1557661598
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1546207935}
-    m_Modifications:
-    - target: {fileID: 2198003112052303894, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: type
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2198003112052303894, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: location
-      value: 
-      objectReference: {fileID: 691093882}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.38
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 7.24
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7377909637721793994, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_Name
-      value: RED Cruiser
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
---- !u!4 &1557661599 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-  m_PrefabInstance: {fileID: 1557661598}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1568341357
 GameObject:
   m_ObjectHideFlags: 0
@@ -11594,6 +11409,7 @@ MonoBehaviour:
   - {fileID: 626970321}
   - {fileID: 634995519}
   - {fileID: 691093882}
+  - {fileID: 562291485}
   unitPositions:
   - {x: 0, y: 0.5, z: 5}
   - {x: -2.5, y: 0.5, z: 5}
@@ -12795,7 +12611,7 @@ GameObject:
   - component: {fileID: 1854067213}
   - component: {fileID: 1854067215}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Tutorial Info
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12908,13 +12724,39 @@ MonoBehaviour:
     to shots against that desroyer.
   - Nice work, it seems like you hit it enough to force a retreat. Let's capitalize
     on this.
-  - Draw a card and get that marine moving towards the island.
-  blockedConditions: 0300000005000000080000000b0000000d000000
+  - Draw 2 cards before we get on the front-foot.
+  - Splits! There are very good to mess with an enemy. We have to options on how
+    to do it, so let's try both.
+  - Let's try using a split card with your submarine first. Subs are special and
+    their first split is a fake unit.
+  - ' They are free units that can block an enemy''s movement, but if they or any
+    of the real units get shot or your sub shoots a unit, it gives away them as a
+    fake and they self destruct.'
+  - Make a fake and send it somewhere on the map.
+  - That'll hopefully keep them off their feet. Let's start on what could give us
+    some leverage on his units and force a surrender.
+  - Use the other split card on your marine. Marines are weak, but can move anywhere.
+    Keeping some at home makes it low risk.
+  - Splitting an actual unit is the same as doing it with a fake, but you choose
+    how much health to give it. Split the marine in two and send it west.
+  - 'They seem to be a bit confused and have halted orders for now. Maybe they put
+    a rookie on their side too. However, their destroyer did recover health. '
+  - 'They seem to be a bit confused and have halted orders for now. Maybe they put
+    a rookie on their side too. However, their destroyer did recover health. '
+  - Every turn a ship rests in a dock or its waters without having an enemy next
+    to it, it recovers health up to its max.
+  - Let's force a surrender. If we get a marine to the island in the far west, we
+    could set up an airbase and then bomb their units in the dock. The enemy would
+    probably surrender at that point. Get that marine over soldier!
+  - Finish them off and use your position to hit that marine to scare them into surrender!
+  blockedConditions: 0300000005000000080000000b0000000d00000011000000140000001800000019000000
   InputHandler: {fileID: 897320895}
   pointingAtAction: {fileID: 979984514}
   cruiser: {fileID: 135541555}
   northwestApproach: {fileID: 626970321}
   enemyDestroyer: {fileID: 2128038995}
+  airbase: {fileID: 634995519}
+  redMarine: {fileID: 944479081}
 --- !u!1 &1890734742
 GameObject:
   m_ObjectHideFlags: 0
@@ -14222,76 +14064,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1001 &2091778460
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1546207935}
-    m_Modifications:
-    - target: {fileID: 2198003112052303894, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: type
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2198003112052303894, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: location
-      value: 
-      objectReference: {fileID: 691093882}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.38
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 7.24
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7377909637721793994, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-      propertyPath: m_Name
-      value: RED Submarine
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
---- !u!4 &2091778461 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5264216017894581613, guid: 176d298dd3b9d454d9261ac0db9e858d, type: 3}
-  m_PrefabInstance: {fileID: 2091778460}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2094899225
 GameObject:
   m_ObjectHideFlags: 0

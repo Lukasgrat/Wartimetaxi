@@ -50,7 +50,7 @@ public class Unit : MonoBehaviour
     //Creates a new Unit
     public void resetUnit(Tile location, int MAXHEALTH, UnitType type, Team team, Player p) 
     {
-        this.location = location;
+        this.moveTo(location);
         this.MAXHEALTH = MAXHEALTH;
         this.type = type;
         this.team = team;
@@ -118,14 +118,23 @@ public class Unit : MonoBehaviour
         return false;
     }
 
-    public void moveTo(Tile tile) 
+    public void moveTo(Tile tile)
     {
         this.location = tile;
 
         if (tile != null)
         {
             tile.changeTeam(this.team);
+            if (tile.isAirBase)
+            {
+                this.grade(true);
+            }
+            else
+            {
+                this.grade(false);
+            }
         }
+
     }
 
     public bool canMoveToLand() 
