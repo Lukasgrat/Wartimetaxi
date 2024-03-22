@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -21,6 +22,10 @@ public class TutorialText : MonoBehaviour
     [SerializeField]
     Image pointingAtAction;
     [SerializeField]
+    Image pointingAtUnit;
+    [SerializeField]
+    Image pointingAtDraw;
+    [SerializeField]
     Unit cruiser;
     [SerializeField]
     Tile northwestApproach;
@@ -33,6 +38,7 @@ public class TutorialText : MonoBehaviour
     
     int startingText = 0;
     int currentText = 0;
+    bool hasHovered = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -89,7 +95,12 @@ public class TutorialText : MonoBehaviour
     {
         if (this.blockedConditions.Count > 0) 
         {
-            if (this.blockedConditions[0] == 3
+            if (this.blockedConditions[0] == 1
+                && this.hasHovered) 
+            {
+                this.blockedConditions.RemoveAt(0);
+            }
+            else if (this.blockedConditions[0] == 3
                 && !this.InputHandler.currentPlayer().canDrawCard(6))
             {
                 this.blockedConditions.RemoveAt(0);
@@ -120,21 +131,20 @@ public class TutorialText : MonoBehaviour
                 this.blockedConditions.RemoveAt(0);
             }
             else if (this.blockedConditions[0] == 20
-                && this.InputHandler.currentPlayer().unitCount() == 5) 
+                && this.InputHandler.currentPlayer().unitCount() == 5)
             {
                 this.blockedConditions.RemoveAt(0);
             }
             else if (this.blockedConditions[0] == 24
-                && this.airbase.unitType() == UnitType.Airbase) 
+                && this.airbase.unitType() == UnitType.Airbase)
             {
                 this.blockedConditions.RemoveAt(0);
             }
-            else if (this.blockedConditions[0] == 25 
+            else if (this.blockedConditions[0] == 25
                 && !this.redMarine.canSurviveShot(3))
             {
                 this.blockedConditions.RemoveAt(0);
             }
-
         }
     }
 
@@ -142,6 +152,8 @@ public class TutorialText : MonoBehaviour
     void tutorialDisplay(int state) 
     {
         this.pointingAtAction.gameObject.SetActive(state == 2);
+        this.pointingAtUnit.gameObject.SetActive(state == 1);
+        this.pointingAtDraw.gameObject.SetActive(state == 3);
     }
 
     //returns what phase of the tutorial the player is in
@@ -153,5 +165,10 @@ public class TutorialText : MonoBehaviour
             return -1;
         }
         return this.blockedConditions[0];
+    }
+
+    public void hovered() 
+    {
+        this.hasHovered = this.currentText == 1;
     }
 }

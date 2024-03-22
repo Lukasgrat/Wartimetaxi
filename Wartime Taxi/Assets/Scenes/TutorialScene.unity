@@ -584,7 +584,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 83379d1ff35dcb64390214afb38a9c02, type: 2}
+  - {fileID: 2100000, guid: ce698658dbba6b54b90d8488257fb099, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1390,6 +1390,81 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 144216121}
+  m_CullTransparentMesh: 1
+--- !u!1 &144972181
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 144972182}
+  - component: {fileID: 144972184}
+  - component: {fileID: 144972183}
+  m_Layer: 5
+  m_Name: Pointing At Draw
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &144972182
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144972181}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: -1.2516, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1854067212}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -1075, y: -389}
+  m_SizeDelta: {x: 160, y: 69.3083}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &144972183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144972181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 75ea391c1ca104045976c0ee6ee92d21, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &144972184
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144972181}
   m_CullTransparentMesh: 1
 --- !u!1 &161921862
 GameObject:
@@ -2287,7 +2362,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 83379d1ff35dcb64390214afb38a9c02, type: 2}
+  - {fileID: 2100000, guid: ce698658dbba6b54b90d8488257fb099, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3180,7 +3255,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 83379d1ff35dcb64390214afb38a9c02, type: 2}
+  - {fileID: 2100000, guid: ce698658dbba6b54b90d8488257fb099, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3926,6 +4001,81 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 14.625977, y: 10.545093, z: 19.468979}
   m_Center: {x: 4.8148847, y: -3.2832437, z: 0.4314041}
+--- !u!1 &564043394
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 564043395}
+  - component: {fileID: 564043397}
+  - component: {fileID: 564043396}
+  m_Layer: 5
+  m_Name: Pointing At Unit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &564043395
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 564043394}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: -1.2516, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1854067212}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: -123, y: -479}
+  m_SizeDelta: {x: 160, y: 69.3083}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &564043396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 564043394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 75ea391c1ca104045976c0ee6ee92d21, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &564043397
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 564043394}
+  m_CullTransparentMesh: 1
 --- !u!1 &564535346
 GameObject:
   m_ObjectHideFlags: 0
@@ -4870,7 +5020,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 83379d1ff35dcb64390214afb38a9c02, type: 2}
+  - {fileID: 2100000, guid: ce698658dbba6b54b90d8488257fb099, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7837,7 +7987,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 83379d1ff35dcb64390214afb38a9c02, type: 2}
+  - {fileID: 2100000, guid: ce698658dbba6b54b90d8488257fb099, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9824,7 +9974,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 83379d1ff35dcb64390214afb38a9c02, type: 2}
+  - {fileID: 2100000, guid: ce698658dbba6b54b90d8488257fb099, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9907,7 +10057,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 83379d1ff35dcb64390214afb38a9c02, type: 2}
+  - {fileID: 2100000, guid: ce698658dbba6b54b90d8488257fb099, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11019,7 +11169,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 83379d1ff35dcb64390214afb38a9c02, type: 2}
+  - {fileID: 2100000, guid: ce698658dbba6b54b90d8488257fb099, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11876,7 +12026,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 23a2229509febb34eb4729ccff3155d4, type: 2}
+  - {fileID: 2100000, guid: ce698658dbba6b54b90d8488257fb099, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12319,10 +12469,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2147186459}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 506, y: -135.2}
-  m_SizeDelta: {x: 535.158, y: 350.5816}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -294, y: -135.2}
+  m_SizeDelta: {x: 535.15796, y: 350.5816}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1821910175
 MonoBehaviour:
@@ -12605,6 +12755,8 @@ RectTransform:
   m_Children:
   - {fileID: 1455214591}
   - {fileID: 979984512}
+  - {fileID: 144972182}
+  - {fileID: 564043395}
   m_Father: {fileID: 2147186459}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
@@ -12669,12 +12821,12 @@ MonoBehaviour:
   - Looks like they are back at it again, and against a rookie no less, let's get
     you up to speed to throw those crooks out!
   - On the board you have your units. You can hover over them to see their name,
-    type, and health. You can see all public information we know about the enemy
-    aswell by hovering over theirs.
-  - Your main way of sending orders are through your action points. Drawing, discarding,
+    type, and health.  Hovering over the enemy's will show all the info we know.
+    Try doing so now.
+  - Your main way of sending orders is  through your action points. Drawing, discarding,
     and playing cards each cost 1 action point.
-  - Firstly, drawing cards gets you more. Depending on the engagement, they may be
-    a bit different in odds. Try drawing one now.
+  - Firstly, drawing a card adds it to your hand. Depending on the engagement, they
+    may be a bit different which cards you get. Try drawing one now.
   - The max amount of cards you can hold is 6. You can't draw any more until one
     has been played or discarded.
   - We don't want to leave ourselves open for now and need more firepower! Discard
@@ -12721,9 +12873,11 @@ MonoBehaviour:
     could set up an airbase and then bomb their units in the dock. The enemy would
     probably surrender at that point. Get that marine over soldier!
   - Finish them off and use your position to hit that marine to scare them into surrender!
-  blockedConditions: 0300000005000000080000000b0000000d00000011000000140000001800000019000000
+  blockedConditions: 010000000300000005000000080000000b0000000d00000011000000140000001800000019000000
   InputHandler: {fileID: 897320895}
   pointingAtAction: {fileID: 979984514}
+  pointingAtUnit: {fileID: 564043396}
+  pointingAtDraw: {fileID: 144972183}
   cruiser: {fileID: 135541555}
   northwestApproach: {fileID: 626970321}
   enemyDestroyer: {fileID: 2128038995}
@@ -14420,7 +14574,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 23a2229509febb34eb4729ccff3155d4, type: 2}
+  - {fileID: 2100000, guid: ce698658dbba6b54b90d8488257fb099, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

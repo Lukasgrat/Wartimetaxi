@@ -73,7 +73,7 @@ public class Player
         this.deck.Add(Object.Instantiate(gameObject,
             new Vector3((this.deck.Count * CARDSPACING) + parent.transform.position.x,
             parent.transform.position.y - 45,
-            parent.transform.position.z),
+            parent.transform.position.z), 
             new Quaternion(), parent.transform));
     }
 
@@ -90,7 +90,7 @@ public class Player
             {
                 card.transform.position =
                     new Vector3(card.transform.position.x - CARDSPACING,
-                    card.transform.position.y - 45,
+                    card.transform.position.y,
                     card.transform.position.z);
             }
             else if (card.sameType(type))

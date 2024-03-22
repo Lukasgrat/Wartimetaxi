@@ -104,6 +104,7 @@ public class InputHandlerTutorial : InputHandler
                     {
                         this.unitInfoText.color = Color.white;
                     }
+                    this.tutorialText.hovered();
                     madeActive = true;
                     break;
                 }
