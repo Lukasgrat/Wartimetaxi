@@ -747,7 +747,7 @@ GameObject:
   m_Component:
   - component: {fileID: 105522656}
   m_Layer: 0
-  m_Name: Airfield (2)
+  m_Name: Airfield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -761,14 +761,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 105522655}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 18.95, y: -1.78, z: 85.59}
-  m_LocalScale: {x: -1.0083613, y: 1, z: -0.9809828}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: 0.37763882, y: 1.0500002, z: -0.9487965}
+  m_LocalScale: {x: 1, y: 1, z: 0.56668}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 302008468}
   - {fileID: 322195169}
-  m_Father: {fileID: 894646162}
+  m_Father: {fileID: 467855345}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &105659980
 GameObject:
@@ -5455,6 +5455,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1762632555}
+  - {fileID: 105522656}
   m_Father: {fileID: 1998348456}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &467855346
@@ -8071,8 +8072,8 @@ MonoBehaviour:
   - {fileID: 625818346}
   - {fileID: 1302204881}
   - {fileID: 21553401}
-  - {fileID: 867357848}
-  - {fileID: 721294229}
+  - {fileID: 1956533373}
+  - {fileID: 1484359429}
   - {fileID: 924650857}
   unitPositions:
   - {x: 0, y: 0.5, z: 0}
@@ -9130,7 +9131,6 @@ Transform:
   m_Children:
   - {fileID: 1201068070}
   - {fileID: 1646542385}
-  - {fileID: 105522656}
   m_Father: {fileID: 1998348456}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &898306109
@@ -12017,7 +12017,7 @@ MonoBehaviour:
   adjacentTiles:
   - {fileID: 936360192}
   - {fileID: 1429039686}
-  - {fileID: 2054671845}
+  - {fileID: 21553401}
   unitPositions:
   - {x: 0, y: 0.5, z: 0}
   - {x: 0, y: 0.5, z: -5}
@@ -14216,7 +14216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   adjacentTiles:
   - {fileID: 1167328729}
-  - {fileID: 2054671845}
+  - {fileID: 21553401}
   unitPositions:
   - {x: 0, y: 1, z: -3}
   - {x: 0, y: 1, z: 3}
@@ -15220,6 +15220,7 @@ MonoBehaviour:
   - {fileID: 467855346}
   - {fileID: 867357848}
   - {fileID: 1956533373}
+  - {fileID: 808815126}
   unitPositions:
   - {x: 0, y: 0.5, z: 0}
   - {x: 0, y: 0.5, z: -2.5}
@@ -16664,7 +16665,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1646542385}
   m_Layer: 0
-  m_Name: Airfield (1)
+  m_Name: Airfield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19169,6 +19170,7 @@ MonoBehaviour:
   - {fileID: 467855346}
   - {fileID: 1484359429}
   - {fileID: 721294229}
+  - {fileID: 808815126}
   unitPositions:
   - {x: 2.5, y: 0.5, z: 0}
   - {x: 0, y: 0.5, z: 0}

@@ -75,6 +75,7 @@ public class InputHandlerTutorial : InputHandler
                 {
                     hasLightenTile = true;
                     this.SelectionHandler(t);
+                    return;
                 }
             }
             if (!hasLightenTile)

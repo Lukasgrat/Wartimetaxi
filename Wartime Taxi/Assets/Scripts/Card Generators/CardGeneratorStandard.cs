@@ -16,12 +16,12 @@ public class CardGeneratorStandard : CardGenerator
     public override Card generateCard() 
     {
         int num = Random.Range(0, 10);
-        if (num < 4)
+        if (num < 5)
         {
             moveCard.setInputHandler(this.inputHandler);
             return moveCard;
         }
-        else if (num < 7) 
+        else if (num < 8) 
         { 
             splitCard.setInputHandler(this.inputHandler);
             return splitCard;

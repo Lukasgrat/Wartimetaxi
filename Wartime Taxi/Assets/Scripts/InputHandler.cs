@@ -166,6 +166,7 @@ public class InputHandler : MonoBehaviour
                 {
                     hasLightenTile = true;
                     this.SelectionHandler(t);
+                    return;
                 }
             }
             if (!hasLightenTile)
@@ -300,7 +301,6 @@ public class InputHandler : MonoBehaviour
     //Discards the given card
     public virtual void discardCard(CardType cardType)
     {
-        this.changeActions(this.actionsLeft - 1);
         this.resetState();
         this.removeCard(cardType);
     }

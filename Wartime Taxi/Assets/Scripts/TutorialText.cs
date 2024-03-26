@@ -22,8 +22,6 @@ public class TutorialText : MonoBehaviour
     [SerializeField]
     Image pointingAtAction;
     [SerializeField]
-    Image pointingAtUnit;
-    [SerializeField]
     Image pointingAtDraw;
     [SerializeField]
     Unit cruiser;
@@ -152,7 +150,6 @@ public class TutorialText : MonoBehaviour
     void tutorialDisplay(int state) 
     {
         this.pointingAtAction.gameObject.SetActive(state == 2);
-        this.pointingAtUnit.gameObject.SetActive(state == 1);
         this.pointingAtDraw.gameObject.SetActive(state == 3);
     }
 
