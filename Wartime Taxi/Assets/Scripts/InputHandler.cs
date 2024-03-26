@@ -257,7 +257,7 @@ public class InputHandler : MonoBehaviour
         else if (this.currentState == State.SelectedSplit)
         {
             this.currentState = State.SelectedTile1Split;
-            t.activateMoveableUnits(this.selectionHandler);
+            t.activateSplitableUnits(this.selectionHandler);
             this.initiatedTile = t;
         }
         else if (this.currentState == State.SelectedUnit1Split)

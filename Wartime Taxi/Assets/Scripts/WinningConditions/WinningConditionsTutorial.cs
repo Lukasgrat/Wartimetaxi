@@ -9,17 +9,29 @@ public class WinningConditionsTutorial : WinningConditions
     // Start is called before the first frame update
     void Start()
     {
+        mainMenuButton.onClick.AddListener(
+           delegate
+           {
+               mainMenuOn = !mainMenuOn;
+               this.displayConditions.gameObject.SetActive(mainMenuOn);
+           }
+           );
         continueButton.onClick.AddListener(
           delegate
           {
               this.displayConditions.gameObject.SetActive(false);
+              mainMenuOn = false;
           });
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            mainMenuOn = !mainMenuOn;
+            this.displayConditions.gameObject.SetActive(mainMenuOn);
+        }
     }
     
     

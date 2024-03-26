@@ -91,6 +91,12 @@ public class Unit : MonoBehaviour
         return this.type.Equals(type);
     }
 
+    //returns if this unit is the same type
+    public bool sameType(Unit u)
+    {
+        return u.sameType(this.type);
+    }
+
     //EFFECT: Converts the unit from a Marine to an Airfield and vice versa
     public void grade(bool isUp) 
     {
@@ -380,15 +386,15 @@ public class Unit : MonoBehaviour
     //EFFECT increases this unit's maximum health and
     //standard health, assuming they are the same type
     //returning if it was successful
-    public bool assimilate(Unit u) 
+    public void assimilate(Unit u) 
     {
         if (this.type != u.type) 
         {
-            return false;
+            throw new Exception("Error: Attempted units to assimiliate are not of the same type");
         }
         if (!u.isReal()) 
         {
-            return true;
+            return;
         } 
         this.health += u.health;
         this.MAXHEALTH += u.MAXHEALTH;
@@ -397,7 +403,6 @@ public class Unit : MonoBehaviour
             this.fake = u.fake;
             this.fake.setParentUnit(this);
         }
-        return true;
     }
 
     //Returns if this and that unit have the same location

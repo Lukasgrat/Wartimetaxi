@@ -21,6 +21,8 @@ public class Tile : MonoBehaviour
     GameObject litTile;
     Team team = Team.Neutral;
     bool isLit = false;
+    [SerializeField]
+    AirFieldGenerator airFieldGenerator;
     // Start is called before the first frame update
     void Start()
     {
@@ -103,6 +105,10 @@ public class Tile : MonoBehaviour
             throw new Exception("Error: Invalid swapping of teams on tile " + this.gameObject.name);
         }
         this.team = team;
+        if (this.isAirBase)
+        {
+            swapAirfield();
+        }
     }
 
 
@@ -121,6 +127,10 @@ public class Tile : MonoBehaviour
         if (this.units.Count == 0)
         {
             this.team = Team.Neutral;
+            if (this.isAirBase) 
+            {
+                swapAirfield();
+            }
         }
 
     }
@@ -205,12 +215,35 @@ public class Tile : MonoBehaviour
         return moveableUnits;
     }
 
+    //Returns all splitable units from this tile
+    public List<Unit> splitableUnits()
+    {
+        List<Unit> splitableUnits = new List<Unit>();
+        foreach (Unit u in this.units)
+        {
+            if (u.canMoveOffOf(this, this.adjacentTiles) 
+                && u.canSurviveShot(1))
+            {
+                splitableUnits.Add(u);
+            }
+
+        }
+        return splitableUnits;
+    }
+
 
     //EFFECT: Given a Selection handler, highlights all unit buttons that can be used
     public void activateMoveableUnits(SelectionHandler handler) 
     { 
         handler.enableButtons(this.moveableUnits());
         
+    }
+
+    //EFFECT: Given a Selection handler, highlights all unit buttons that can be used
+    public void activateSplitableUnits(SelectionHandler handler)
+    {
+        handler.enableButtons(this.splitableUnits());
+
     }
 
     //Returns all units that can shoot form this tile
@@ -289,6 +322,39 @@ public class Tile : MonoBehaviour
             }
         }
         throw new Exception("Error: Unit not found in tile");
+    }
+
+    //Swaps the airfield on this tile to the current team
+    void swapAirfield()
+    {
+        GameObject airfield = null;
+        for (int i = 0; i < transform.childCount; i += 1)
+        {
+            if (transform.GetChild(i).name.Equals("Airfield"))
+            {
+                List<String> airfieldNames = new List<String>();
+                airfieldNames.Add("AirField-Green");
+                airfieldNames.Add("AirField-Red");
+                airfieldNames.Add("AirField-Neutral");
+                airfield = transform.GetChild(i).gameObject;
+                for (int index = 0; index < airfield.transform.childCount; index += 1) 
+                {
+                    if (airfieldNames.Contains(airfield.transform.GetChild(index).name)) 
+                    {
+                        Destroy(airfield.transform.GetChild(index).gameObject);
+                    }
+                }
+            }
+        }
+        if (airfield != null)
+        {
+            this.airFieldGenerator.generateAirField(this.team, airfield);
+            return;
+        }
+        else
+        {
+            throw new Exception("Airfield Missing on tile:" + this.name);
+        }
     }
 
 

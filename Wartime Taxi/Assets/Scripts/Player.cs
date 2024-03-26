@@ -13,7 +13,7 @@ public class Player
     Vector3 startingPoint;
     [SerializeField]
     CardGenerator generator;
-    int CARDSPACING = 110;
+    int CARDSPACING = Screen.width/15;
     int standardMaxHealth = 4;
 
     public Player(Team team, Vector3 startingPoint, CardGenerator generator)
@@ -70,8 +70,17 @@ public class Player
     public void drawCard(GameObject parent)
     {
         Card gameObject = generator.generateCard();
+        if (this.deck.Count == 0) {
         this.deck.Add(Object.Instantiate(gameObject,
-            new Vector3((this.deck.Count * CARDSPACING) + parent.transform.position.x,
+            new Vector3(parent.transform.position.x,
+            parent.transform.position.y - 45,
+            parent.transform.position.z),
+            new Quaternion(), parent.transform));
+        return;
+        }
+        Transform priorCardTransform = this.deck[this.deck.Count - 1].transform;
+        this.deck.Add(Object.Instantiate(gameObject,
+            new Vector3(CARDSPACING + priorCardTransform.position.x,
             parent.transform.position.y - 45,
             parent.transform.position.z), 
             new Quaternion(), parent.transform));
@@ -309,12 +318,20 @@ public class Player
         { 
             for(int j = i + 1; j < this.units.Count; j++)
             {
-                if (this.units[i].sameLocation(this.units[j])) 
+                if (this.units[i].sameLocation(this.units[j]) 
+                    && this.units[i].sameType(this.units[j])) 
                 {
-                    if (this.units[i].assimilate(this.units[j])) 
+                    if (this.units[i].isReal())
                     {
+                        this.units[i].assimilate(this.units[j]);
                         this.destroyUnit(this.units[j]);
-                        j--;
+                        j -= 1;
+                    }
+                    else 
+                    {
+                        this.units[j].assimilate(this.units[i]);
+                        this.destroyUnit(this.units[i]);
+                        i -= 1;
                     }
                 }
             }

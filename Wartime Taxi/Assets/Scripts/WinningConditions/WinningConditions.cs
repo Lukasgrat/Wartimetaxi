@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -21,6 +22,10 @@ public class WinningConditions : MonoBehaviour
     List<Tile> importantTiles;
     [SerializeField]
     int tilesNeeded;
+    internal bool mainMenuOn = true;
+    [SerializeField]
+    internal Button mainMenuButton;
+
 
     //ASSUMES THAT THE PLAYER LIST GIVEN HAS CONSISTENT INDEXES
     int winningPlayerIndex = -1;
@@ -30,7 +35,23 @@ public class WinningConditions : MonoBehaviour
             delegate 
             {
                 this.displayConditions.gameObject.SetActive(false);
+                mainMenuOn = false;
         });
+        mainMenuButton.onClick.AddListener(
+            delegate 
+            {
+                mainMenuOn = !mainMenuOn;
+                this.displayConditions.gameObject.SetActive(mainMenuOn);
+            }
+            );
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            mainMenuOn = !mainMenuOn;
+            this.displayConditions.gameObject.SetActive(mainMenuOn);
+        }
     }
 
     //returns the count of the player who won. If no one has, return -1
