@@ -121,7 +121,7 @@ public class InputHandlerTutorial : InputHandler
     }
     internal new void drawCard()
     {
-        if (this.actionsLeft != 0) {
+        if (this.tutorialText.currentPhase() > 3 && this.actionsLeft != 0) {
             EventSystem.current.SetSelectedGameObject(null);
             Player player = this.currentPlayer();
             if (player.canDrawCard(this.MAXCARDCOUNT))
@@ -137,13 +137,11 @@ public class InputHandlerTutorial : InputHandler
     {
         if (this.tutorialText.currentPhase() > 5)
         {
-            this.changeActions(this.actionsLeft - 1);
             this.resetState();
             this.removeCard(cardType);
         }
-        else if (this.tutorialText.currentPhase() == 5 && cardType == CardType.Move)
+        else if (this.tutorialText.currentPhase() == 3 && cardType == CardType.Move)
         {
-            this.changeActions(this.actionsLeft - 1);
             this.resetState();
             this.removeCard(cardType);
         }

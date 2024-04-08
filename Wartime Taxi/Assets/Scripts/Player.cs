@@ -86,6 +86,20 @@ public class Player
             new Quaternion(), parent.transform));
     }
 
+    //Returns the count of the given within this player's hand
+    public int getCount(CardType type) 
+    {
+        int count = 0;
+        foreach (Card card in this.deck) 
+        {
+            if (card.sameType(type)) 
+            {
+                count += 1;
+            }
+        }
+        return count;
+    }
+
 
     //EFFECT: Removes the first instance of the given type of card within this person's hand
     // If none are found, does nothing
@@ -114,7 +128,7 @@ public class Player
 
     //Returns all possible actions this player can perform,
     //given the maximum number of cards, and where to store cards
-    public List<Action> possibleActions(int maxCards, GameObject parent, Player enemy, FakeUnit fakeTemplateUnit, Unit templateUnit) 
+    public List<Action> possibleActions(int maxCards, GameObject parent, Player enemy, UnitGenerator unitGenerator) 
     {
         List<Action> actions = new List<Action>();
         if (this.canDrawCard(maxCards))
@@ -159,10 +173,10 @@ public class Player
                     if (u.type == UnitType.Submarine && !this.containsFake())
                     {
                         actions.Add(new OrderAction(
-                            u.makeFakeSplitOrder(t, this, fakeTemplateUnit, true), 
+                            u.makeFakeSplitOrder(t, this, unitGenerator, true), 
                             this));
                         actions.Add(new OrderAction(
-                            u.makeFakeSplitOrder(t, this, fakeTemplateUnit, false), 
+                            u.makeFakeSplitOrder(t, this, unitGenerator, false), 
                             this));
                     }
                     else
@@ -170,7 +184,7 @@ public class Player
                         foreach (int health in u.possibleHealthSplits())
                         {
                             actions.Add(new OrderAction(
-                                u.makeSplitOrder(t, this, health, templateUnit),
+                                u.makeSplitOrder(t, this, health, unitGenerator),
                                 this));
                         }
                     }
@@ -185,7 +199,7 @@ public class Player
             {
                 foreach (Tile t in u.movements()) 
                 {
-                    actions.Add(new OrderAction(u.makeMoveOrder(t), this));
+                    actions.Add(new OrderAction(u.makeMoveOrder(t, this), this));
                 }
             }
         }
@@ -299,7 +313,9 @@ public class Player
         int x = 0;
         foreach (Unit u in this.units) 
         { 
-            if(u.sameType(type)) 
+            if(u.sameType(type) 
+                || ((type == UnitType.Airbase || type == UnitType.Marine)
+                && (u.sameType(UnitType.Airbase) || u.sameType(UnitType.Marine))))
             {
                 x = u.addMaxHealthTo(x);
             }

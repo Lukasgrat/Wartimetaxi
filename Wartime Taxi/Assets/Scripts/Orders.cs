@@ -8,20 +8,24 @@ public interface Order
     bool isValid();
     void playCard();
 
-    int value();
+    int value(List<Tile> prioritizedTiles);
 
     CardType getType();
+
+    void destroyCard(Player p);
 }
 
 class Move : Order {
     Tile currentTile;
     Tile nextTile;
     Unit unit;
-    public Move(Tile currentTile, Tile nextTile, Unit unit) 
+    Player player;
+    public Move(Tile currentTile, Tile nextTile, Unit unit, Player player) 
     {
         this.currentTile = currentTile;
         this.nextTile = nextTile;
         this.unit = unit; 
+        this.player = player;
     }
     public bool isValid() 
     {
@@ -39,6 +43,7 @@ class Move : Order {
         {
             this.unit.grade(true);
         }
+
     }
 
     public CardType getType() 
@@ -46,9 +51,46 @@ class Move : Order {
         return CardType.Move;
     }
 
-    public int value()
+    public int value(List<Tile> prioritizedTiles)
     {
+
+        if (this.unit.sameType(UnitType.Airbase)) 
+        {
+            return 1;
+        }
+        if (this.unit.sameType(UnitType.Marine))
+        {
+            Debug.Log(this.player);
+            Debug.Log(this.unit);
+            if (this.unit.canSurviveShot(2) && this.player.getCount(CardType.Split) > 0)
+            {
+                return 3;
+            }
+
+            foreach (Tile t in prioritizedTiles)
+            {
+                Debug.Log("there");
+                if (!this.unit.sameTeam(t))
+                {
+                    Debug.Log("here");
+                    List<Tile> path = this.currentTile.findPath(t);
+                    Debug.Log(path);
+                    if (path[0] == this.nextTile) 
+                    {
+                        return 20 - path.Count;
+                    }
+                }
+            }
+            return 8;
+        }
+
         return 6;
+    }
+
+
+    public void destroyCard(Player p) 
+    {
+        p.removeCard(this.getType());
     }
 }
 
@@ -89,9 +131,9 @@ class Shoot : Order
         }
     }
 
-    public int value()
+    public int value(List<Tile> prioritizedTiles)
     {
-        return 10;
+        return 25;
     }
 
 
@@ -99,37 +141,41 @@ class Shoot : Order
     {
         return CardType.Shoot;
     }
+
+    public void destroyCard(Player p)
+    {
+        p.removeCard(this.getType());
+    }
 }
 
 class Split : Order 
 {
-    Unit u;
+    Unit unit;
     Tile currentTile;
     Tile nextTile;
     int splitHealth;
     Player p;
     bool isFake;
-    Unit templateUnit;
-    FakeUnit fakeTemplateUnit;
+    UnitGenerator UG;
     bool shouldSwapPlaces;
-    public Split(Unit u, Tile currentTile, Tile nextTile, Player p, int splitHealth, Unit templateUnit) 
+    public Split(Unit unit, Tile currentTile, Tile nextTile, Player p, int splitHealth, UnitGenerator UG) 
     { 
-        this.u = u;
+        this.unit = unit;
         this.nextTile = nextTile;
         this.p = p;
         this.currentTile = currentTile;
         this.splitHealth = splitHealth;
-        this.templateUnit = templateUnit;
+        this.UG = UG;
         this.isFake = false;
     }
 
-    public Split(Unit u, Tile currentTile, Tile nextTile, Player p, FakeUnit fakeTemplateUnit, bool shouldSwapPlaces) 
+    public Split(Unit unit, Tile currentTile, Tile nextTile, Player p, UnitGenerator UG, bool shouldSwapPlaces) 
     {
-        this.u = u;
+        this.unit = unit;
         this.currentTile = currentTile;
         this.nextTile = nextTile;
         this.p = p;
-        this.fakeTemplateUnit = fakeTemplateUnit;
+        this.UG = UG;
         this.shouldSwapPlaces = shouldSwapPlaces;
         this.isFake = true;
     }
@@ -145,47 +191,57 @@ class Split : Order
         { 
             this.splitFake();
         }
+
+        this.p.consolidate();
     }
 
     void splitReal()
     {
-        Unit newUnit = this.templateUnit;
-        this.u.split(this.nextTile, splitHealth, newUnit);
-        GameObject unitsParent = GameObject.Find("Units");
-        Unit finishedUnit = Object.Instantiate(newUnit,
-           Vector3.zero,
-            new Quaternion(), unitsParent.transform);
-        p.addUnit(finishedUnit);
+        Unit newUnit = this.UG.createUnit(this.unit);
+        this.unit.split(this.nextTile, splitHealth, newUnit);
+        p.addUnit(newUnit);
 
     }
 
-    void splitFake() 
+    void splitFake()
     {
-        FakeUnit newUnit = this.fakeTemplateUnit;
-        this.u.split(this.nextTile, newUnit, this.shouldSwapPlaces);
-        GameObject unitsParent = GameObject.Find("Units");
-        FakeUnit finishedUnit = Object.Instantiate(newUnit,
-            Vector3.zero,
-            new Quaternion(), unitsParent.transform);
-        p.addUnit(finishedUnit);
-        this.u.addFake(finishedUnit);
+        FakeUnit newUnit = this.UG.createFakeUnit(this.unit);
+        this.unit.fakeSplit(this.nextTile, newUnit, this.shouldSwapPlaces);
+        p.addUnit(newUnit);
+        this.unit.addFake(newUnit);
     }
 
 
     public bool isValid() 
     {
-        return u.healthToSpare() >= this.splitHealth && this.currentTile.canMove(this.u, this.nextTile);
+        return unit.healthToSpare() >= this.splitHealth && this.currentTile.canMove(this.unit, this.nextTile);
     }
 
-    public int value() 
+    public int value(List<Tile> prioritizedTiles) 
     {
-        return 1;
+        if (!this.unit.canSurviveShot(2))
+        {
+            return 2;
+        }
+        else if (this.unit.sameType(UnitType.Marine) && splitHealth == 2)
+        {
+            return 15;
+        }
+        else 
+        {
+            return 5;
+        }
     }
 
 
     public CardType getType()
     {
         return CardType.Split;
+    }
+
+    public void destroyCard(Player p)
+    {
+        p.removeCard(this.getType());
     }
 }
 

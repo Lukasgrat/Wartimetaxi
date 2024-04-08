@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -134,6 +135,65 @@ public class Tile : MonoBehaviour
         }
 
     }
+    class Edge {
+        public Tile to;
+        public Tile from;
+        public Edge(Tile from, Tile to)
+        {
+            this.to = to;
+            this.from = from;
+        }
+    }
+
+    //Determines the shortest path from this tile to the given tile
+    public List<Tile> findPath(Tile desiredTile) 
+    {
+        Dictionary<Tile, List<Tile>> paths = new Dictionary<Tile, List<Tile>>();
+        List<Tile> visitedTiles = new List<Tile>();
+        Queue<Edge> nextTiles = new Queue<Edge>();
+        if (this == desiredTile) {
+            return new List<Tile>();
+        }
+        foreach(Tile t in this.adjacentTiles) 
+        {
+            nextTiles.Enqueue(new Edge(this, t));
+        }
+        visitedTiles.Add(this);
+        paths.Add(this, new List<Tile>());
+        while (nextTiles.Count != 0 ) 
+        {
+            Edge curEdge = nextTiles.Dequeue();
+            Tile from = curEdge.from;
+            Tile curTile = curEdge.to;
+            if (!visitedTiles.Contains(curTile))
+            {
+                visitedTiles.Add(curTile);
+                List<Tile> path = new List<Tile>();
+                foreach (Tile t in paths[from])
+                {
+                    path.Add(t);
+                }
+                path.Add(curTile);
+
+                if (curTile == desiredTile)
+                {
+                    return path;
+                }
+                paths.Add(curTile, path);
+                foreach (Tile t in curTile.adjacentTiles)
+                {
+                    if (!visitedTiles.Contains(t))
+                    {
+                        nextTiles.Enqueue(new Edge(curTile, t));
+                    }
+                }
+
+            }
+        }
+        throw new Exception("No path found");
+    }
+
+
     //EFFECT:Lights all tiles that the given unit can move to, assuming they are on this tile
     public void lightMoveable(Unit unit)
     {

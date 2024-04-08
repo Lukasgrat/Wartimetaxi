@@ -6,7 +6,10 @@ public interface Action
 {
     void PlayMove();
 
-    int value();
+    int value(List<Tile> prioritizedTiles);
+
+    //returns if this action required an action point
+    bool requiresAction();
 }
 
 class OrderAction : Action
@@ -16,15 +19,22 @@ class OrderAction : Action
     public OrderAction(Order order, Player p) 
     {
         this.order = order;
+        this.p = p;
     }
     public void PlayMove() 
     {
         this.order.playCard();
+        this.order.destroyCard(this.p);
     }
 
-    public int value() 
+    public int value(List<Tile> prioritizedTiles) 
     {
-        return order.value();
+        return order.value(prioritizedTiles);
+    }
+
+    public bool requiresAction() 
+    {
+        return true;
     }
 }
 
@@ -43,13 +53,18 @@ class Discard : Action
         this.p.removeCard(this.cardType);
     }
 
-    public int value() 
+    public int value(List<Tile> prioritizedTiles) 
     {
         if (this.p.canDrawCard(6)) 
         {
             return 0;
         }
         return 5;
+    }
+
+    public bool requiresAction()
+    {
+        return false;
     }
 }
 
@@ -68,12 +83,22 @@ class DrawCard : Action
         this.p.drawCard(this.parent);
     }
 
-    public int value() 
+    public int value(List<Tile> prioritizedTiles) 
     {
         if (this.p.canDrawCard(3))
+        {
+            return 20;
+        }
+        else if (this.p.getCount(CardType.Move) < 2 
+            && this.p.getCount(CardType.Shoot) < 2) 
         {
             return 15;
         }
         return 5;
+    }
+
+    public bool requiresAction()
+    {
+        return true;
     }
 }

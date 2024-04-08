@@ -114,11 +114,13 @@ public class WinningConditions : MonoBehaviour
         else if (currentController != this.winningPlayerIndex)
         {
             this.turnsLeft = this.TURNSNEEDED;
+            this.winningPlayerIndex = currentController;
             this.turnsDisplay.SetActive(true);
         }
         else 
         {
             this.turnsLeft -= 1;
         }
+        turnText.text = this.turnsLeft.ToString();
     }
 }

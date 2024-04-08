@@ -85,9 +85,15 @@ public class Unit : MonoBehaviour
     public bool sameTeam(Team team) { return this.team == team; }
 
 
+
+    //returns whether this unit has the same team as the given tile
+
+    public bool sameTeam(Tile t) { return t.sameTeam(this.team); }
+
+
     //returns if this unit is the given type
     public bool sameType(UnitType type) 
-    { 
+    {
         return this.type.Equals(type);
     }
 
@@ -340,12 +346,12 @@ public class Unit : MonoBehaviour
 
     //Splits this unit to alter the given one with the given health and Tile,
     //And if the new one is a fake(ignored for all units except submarine)
-    public void split(Tile tile, FakeUnit templateUnit, bool shouldSwapPlaces)
+    public void fakeSplit(Tile tile, FakeUnit templateUnit, bool shouldSwapPlaces)
     {
         if (shouldSwapPlaces)
         {
             templateUnit.resetUnit(this.location, this.health, this.type, this.team, this.player);
-            Order moveOrder = new Move(this.location, tile, this);
+            Order moveOrder = new Move(this.location, tile, this, this.player);
             moveOrder.playCard();
         }
         else 
@@ -413,20 +419,20 @@ public class Unit : MonoBehaviour
 
     //Makes a move order out of the given next tile to move to
 
-    public Order makeMoveOrder(Tile nextTile) 
+    public Order makeMoveOrder(Tile nextTile, Player p) 
     {
-        return new Move(this.location, nextTile, this);
+        return new Move(this.location, nextTile, this, p);
     }
 
     //Makes a fake split order out of the given health, nexttile, swapping, and respective templates
-    public Order makeFakeSplitOrder(Tile nextTile, Player p, FakeUnit unit, bool shouldSwapPlaces) 
+    public Order makeFakeSplitOrder(Tile nextTile, Player p, UnitGenerator unitGenerator, bool shouldSwapPlaces) 
     {
-        return new Split(this, this.location, nextTile, p, unit, shouldSwapPlaces);
+        return new Split(this, this.location, nextTile, p, unitGenerator, shouldSwapPlaces);
     }
 
-    public Order makeSplitOrder(Tile nextTile, Player p, int health, Unit unit) 
+    public Order makeSplitOrder(Tile nextTile, Player p, int health, UnitGenerator unitGenerator) 
     {
-        return new Split(this, this.location, nextTile, p, health, unit);
+        return new Split(this, this.location, nextTile, p, health, unitGenerator);
     }
 
 

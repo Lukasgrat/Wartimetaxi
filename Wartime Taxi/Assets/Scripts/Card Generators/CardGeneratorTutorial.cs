@@ -22,14 +22,9 @@ public class CardGeneratorTutorial : CardGenerator
         {
             moveCard.setInputHandler(this.inputHandler);
             counter += 1;
-            if(counter == 3) 
-            {
-                shootCard.setInputHandler(this.inputHandler);
-                return shootCard;
-            }
             return moveCard;
         }
-        else if(tt.currentPhase() < 5)
+        else if(tt.currentPhase() < 8)
         {
             shootCard.setInputHandler(this.inputHandler);
             return shootCard;

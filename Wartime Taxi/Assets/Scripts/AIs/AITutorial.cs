@@ -17,10 +17,10 @@ public class AITutorial : AI
     Tile tile2;
     [SerializeField]
     Tile tile3;
-    public override void makeMove(Player currentPlayer, Player opposingPlayer,
-        FakeUnit fakeUnit, Unit unit, GameObject cards, int maxCardCount) 
+    public override bool makeMove(Player currentPlayer, Player opposingPlayer,
+        UnitGenerator unitGenerator, GameObject cards, int maxCardCount) 
     {
-        if (this.tt.currentPhase() < 1) { return; }
+        if (this.tt.currentPhase() < 1) { return true; }
         else if (this.tt.currentPhase() == 11 && !this.destroyer.onLocation(this.tile2))
         {
             if (counter == 0)
@@ -30,17 +30,16 @@ public class AITutorial : AI
             }
             else if (counter == 1)
             {
-                Action act2 = new OrderAction(new Move(this.tile1, this.tile2, this.destroyer), currentPlayer);
+                Action act2 = new OrderAction(new Move(this.tile1, this.tile2, this.destroyer, currentPlayer), currentPlayer);
                 act2.PlayMove();
             }
             counter += 1;
-            return;
         }
         else if (this.tt.currentPhase() == 13 && !this.destroyer.onLocation(this.tile1))
         {
             if (counter == 2)
             {
-                Action act2 = new OrderAction(new Move(this.tile2, this.tile1, this.destroyer), currentPlayer);
+                Action act2 = new OrderAction(new Move(this.tile2, this.tile1, this.destroyer, currentPlayer), currentPlayer);
                 act2.PlayMove();
             }
             else if (counter == 3)
@@ -50,16 +49,7 @@ public class AITutorial : AI
             }
            
             counter += 1;
-            return;
         }
-        else 
-        {
-            return;
-        }
-        List<Action> list = currentPlayer.possibleActions(
-            maxCardCount, cards, opposingPlayer, fakeUnit, unit).OrderBy(x => Guid.NewGuid()).ToList();
-
-        this.quicksort(list);
-        list[0].PlayMove();
+        return true;
     }
 }

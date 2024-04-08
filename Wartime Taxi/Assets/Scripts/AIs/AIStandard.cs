@@ -6,13 +6,18 @@ using System;
 
 public class AIStandard : AI
 {
-    public override void makeMove(Player currentPlayer, Player opposingPlayer,
-        FakeUnit fakeUnit, Unit unit, GameObject cards, int maxCardCount) 
+    [SerializeField]
+    List<Tile> prioritizedTiles;
+
+    //Given the attributes needed to make the values and move itself, returns whether the move required removing action points or not
+    public override bool makeMove(Player currentPlayer, Player opposingPlayer,
+        UnitGenerator unitGenerator, GameObject cards, int maxCardCount) 
     {
         List<Action> list = currentPlayer.possibleActions(
-            maxCardCount, cards, opposingPlayer, fakeUnit, unit).OrderBy(x => Guid.NewGuid()).ToList();
+            maxCardCount, cards, opposingPlayer, unitGenerator).OrderBy(x => Guid.NewGuid()).ToList();
 
-        this.quicksort(list);
+        this.quicksort(list, prioritizedTiles);
         list[0].PlayMove();
+        return list[0].requiresAction();
     }
 }

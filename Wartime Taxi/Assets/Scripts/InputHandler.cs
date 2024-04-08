@@ -63,16 +63,6 @@ public class InputHandler : MonoBehaviour
     internal NextTurnButton nextTurnButton;
 
     [SerializeField]
-    internal Unit greenTemplateUnit;
-    [SerializeField]
-    internal Unit redTemplateUnit;
-
-    [SerializeField]
-    internal FakeUnit greenFakeTemplateUnit;
-    [SerializeField]
-    internal FakeUnit redFakeTemplateUnit;
-
-    [SerializeField]
     internal FakeButton fakeButton;
 
 
@@ -80,6 +70,9 @@ public class InputHandler : MonoBehaviour
     internal WinningConditions winningConditions;
     [SerializeField]
     internal WinningScript winningScript;
+
+    [SerializeField]
+    UnitGenerator unitGenerator;
 
     internal bool AI = false;
     internal enum State
@@ -239,7 +232,7 @@ public class InputHandler : MonoBehaviour
         }
         else if (this.currentState == State.SelectedUnit1Move)
         {
-            Order order = new Move(this.initiatedTile, t, this.initiator);
+            Order order = new Move(this.initiatedTile, t, this.initiator, this.currentPlayer());
             this.playOrder(order);
             this.currentPlayer().consolidate();
         }
@@ -365,21 +358,8 @@ public class InputHandler : MonoBehaviour
 
     internal void createRealUnit(int health)
     {
-        Unit templateUnit;
-        if (this.currentPlayerTeam == Team.Green)
-        {
-            templateUnit = this.greenTemplateUnit;
-        }
-        else if (this.currentPlayerTeam == Team.Red)
-        {
-            templateUnit = this.redTemplateUnit;
-        }
-        else
-        {
-            throw new Exception("Team " + this.currentPlayerTeam + " has no given template for units");
-        }
         Order order = new Split(this.initiator, this.initiatedTile,
-            this.splitMovingTile, this.currentPlayer(), health, templateUnit);
+            this.splitMovingTile, this.currentPlayer(), health, unitGenerator);
         this.playOrder(order);
         this.currentPlayer().consolidate();
 
@@ -399,21 +379,8 @@ public class InputHandler : MonoBehaviour
     {
         if (this.currentState == State.SelectingFakeSplit)
         {
-            FakeUnit templateUnit;
-            if (this.currentPlayerTeam == Team.Green)
-            {
-                templateUnit = this.greenFakeTemplateUnit;
-            }
-            else if (this.currentPlayerTeam == Team.Red)
-            {
-                templateUnit = this.redFakeTemplateUnit;
-            }
-            else
-            {
-                throw new Exception("Team " + this.currentPlayerTeam + " has no given template for units");
-            }
             Order order = new Split(this.initiator, this.initiatedTile,
-                this.splitMovingTile, this.currentPlayer(), templateUnit, !isMovingFake);
+                this.splitMovingTile, this.currentPlayer(), unitGenerator, !isMovingFake);
             this.playOrder(order);
             this.currentPlayer().consolidate();
         }
@@ -567,27 +534,12 @@ public class InputHandler : MonoBehaviour
     internal void AIRun()
     {
         this.resetState();
-        FakeUnit currentFake;
-        Unit currentUnit;
-        if (this.currentPlayer().sameTeam(Team.Red))
-        {
-            currentFake = this.redFakeTemplateUnit;
-            currentUnit = this.redTemplateUnit;
-        }
-        else if (this.currentPlayer().sameTeam(Team.Green))
-        {
-            currentFake = this.greenFakeTemplateUnit;
-            currentUnit = this.greenTemplateUnit;
-        }
-        else 
-        {
-            throw new Exception("Team not accounted for in AI");
-        }
-
         while (actionsLeft != 0)
         {
-            this.ai.makeMove(this.currentPlayer(), this.opposingPlayer(), currentFake, currentUnit, this.cards, this.MAXCARDCOUNT);
-            this.changeActions(this.actionsLeft - 1);
+            if (this.ai.makeMove(this.currentPlayer(), this.opposingPlayer(), unitGenerator, this.cards, this.MAXCARDCOUNT))
+            { 
+                this.changeActions(this.actionsLeft - 1);
+            }
         }
         this.nextTurn();
     }

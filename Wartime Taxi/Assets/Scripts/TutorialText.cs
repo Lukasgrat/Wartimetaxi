@@ -24,6 +24,12 @@ public class TutorialText : MonoBehaviour
     [SerializeField]
     Image pointingAtDraw;
     [SerializeField]
+    GameObject pointingAtUnit;
+    [SerializeField]
+    Image pointingAtCruiser;
+    [SerializeField]
+    GameObject pointingAtDeck;
+    [SerializeField]
     Unit cruiser;
     [SerializeField]
     Tile northwestApproach;
@@ -99,12 +105,12 @@ public class TutorialText : MonoBehaviour
                 this.blockedConditions.RemoveAt(0);
             }
             else if (this.blockedConditions[0] == 3
-                && !this.InputHandler.currentPlayer().canDrawCard(6))
+                && this.InputHandler.currentPlayer().canDrawCard(5))
             {
                 this.blockedConditions.RemoveAt(0);
             }
             else if (this.blockedConditions[0] == 5
-                && this.InputHandler.currentPlayer().canDrawCard(6))
+                && !this.InputHandler.currentPlayer().canDrawCard(6))
             {
                 this.blockedConditions.RemoveAt(0);
             }
@@ -150,7 +156,10 @@ public class TutorialText : MonoBehaviour
     void tutorialDisplay(int state) 
     {
         this.pointingAtAction.gameObject.SetActive(state == 2);
-        this.pointingAtDraw.gameObject.SetActive(state == 3);
+        this.pointingAtUnit.gameObject.SetActive(state == 1);
+        this.pointingAtDraw.gameObject.SetActive(state == 5);
+        this.pointingAtDeck.gameObject.SetActive(state == 7);
+        this.pointingAtCruiser.gameObject.SetActive(state == 8);
     }
 
     //returns what phase of the tutorial the player is in
