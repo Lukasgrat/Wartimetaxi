@@ -22,6 +22,12 @@ public class TutorialText : MonoBehaviour
     [SerializeField]
     Image pointingAtAction;
     [SerializeField]
+    GameObject pointingAtIsland;
+    [SerializeField]
+    GameObject pointingAtMarine;
+    [SerializeField]
+    Image pointingAtTypes;
+    [SerializeField]
     Image pointingAtDraw;
     [SerializeField]
     GameObject pointingAtUnit;
@@ -29,6 +35,8 @@ public class TutorialText : MonoBehaviour
     Image pointingAtCruiser;
     [SerializeField]
     GameObject pointingAtDeck;
+    [SerializeField]
+    GameObject pointingAtDestroyer;
     [SerializeField]
     Unit cruiser;
     [SerializeField]
@@ -62,7 +70,6 @@ public class TutorialText : MonoBehaviour
             this.forwardButton.gameObject.SetActive(true);
         }
         this.tutorialDisplay(this.currentText);
-        this.changeConditions();
     }
 
     void changeText(int change)
@@ -95,7 +102,7 @@ public class TutorialText : MonoBehaviour
         }
     }
 
-    void changeConditions()
+    public void changeConditions()
     {
         if (this.blockedConditions.Count > 0) 
         {
@@ -139,12 +146,12 @@ public class TutorialText : MonoBehaviour
             {
                 this.blockedConditions.RemoveAt(0);
             }
-            else if (this.blockedConditions[0] == 24
+            else if (this.blockedConditions[0] == 22
                 && this.airbase.unitType() == UnitType.Airbase)
             {
                 this.blockedConditions.RemoveAt(0);
             }
-            else if (this.blockedConditions[0] == 25
+            else if (this.blockedConditions[0] == 23
                 && !this.redMarine.canSurviveShot(3))
             {
                 this.blockedConditions.RemoveAt(0);
@@ -160,6 +167,10 @@ public class TutorialText : MonoBehaviour
         this.pointingAtDraw.gameObject.SetActive(state == 5);
         this.pointingAtDeck.gameObject.SetActive(state == 7);
         this.pointingAtCruiser.gameObject.SetActive(state == 8);
+        this.pointingAtTypes.gameObject.SetActive(state == 9);
+        this.pointingAtDestroyer.gameObject.SetActive(state == 21);
+        this.pointingAtIsland.gameObject.SetActive(state == 22);
+        this.pointingAtMarine.gameObject.SetActive(state == 23);
     }
 
     //returns what phase of the tutorial the player is in

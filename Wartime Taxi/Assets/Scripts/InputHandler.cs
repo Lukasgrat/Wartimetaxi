@@ -271,7 +271,8 @@ public class InputHandler : MonoBehaviour
         }
         if ((this.currentState == State.SelectedTile1Move
             || this.currentState == State.SelectedTile1Shoot
-            || this.currentState == State.SelectedTile1Split)
+            || this.currentState == State.SelectedTile1Split
+            || this.currentState == State.SelectedTile2Shoot)
             && t.unitType() != UnitType.None)
         {
             this.unitSelected(t.unitType());
@@ -428,6 +429,7 @@ public class InputHandler : MonoBehaviour
     internal void nextTurn()
     {
         this.playerList[currentPlayerIndex].showCards(false);
+
         switch (this.currentPlayerTeam) 
         { 
             case Team.Green:
@@ -438,15 +440,15 @@ public class InputHandler : MonoBehaviour
             case Team.Red:
                 this.currentPlayerTeam = Team.Green;
                 turnNumber += 1;
-                this.winningConditions.updateStandings(this.playerList);
                 this.currentPlayerIndex = 0;
                 nextTurnButton.appear(this.currentPlayerTeam, this.boardState());
                 break;
             default:
                 throw new Exception("Error, invalid state for current team reached");
         }
+        this.winningConditions.updateStandings(this.playerList, this.currentPlayerIndex);
         int possibleWinner = this.winningConditions.hasMet(this.playerList);
-        if (possibleWinner != -1) 
+        if (possibleWinner != -1)
         {
             this.winningScript.declareWinner(this.playerList[possibleWinner]);
         }

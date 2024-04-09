@@ -255,12 +255,12 @@ public class Unit : MonoBehaviour
     {
         if (this.type == UnitType.Submarine && !this.opposingTeam(team))
         {
-            return this.team + " Real " + this.type + "\n Health: " + this.health + " Max:" + this.MAXHEALTH;
+            return this.team + " Real " + this.type + "\n Health: " + this.health + " / " + this.MAXHEALTH;
 
         }
         else
         {
-            return this.team + " " + this.type + "\n Health: " + this.health + " Max:" + this.MAXHEALTH;
+            return this.team + " " + this.type + "\n Health: " + this.health + " / " + this.MAXHEALTH;
         }
     }
 

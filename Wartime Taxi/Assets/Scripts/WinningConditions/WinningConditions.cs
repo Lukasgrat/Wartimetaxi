@@ -17,7 +17,7 @@ public class WinningConditions : MonoBehaviour
     GameObject turnsDisplay;
     [SerializeField]
     int TURNSNEEDED;
-    int turnsLeft;
+    int turnsHeld;
     [SerializeField]
     List<Tile> importantTiles;
     [SerializeField]
@@ -57,7 +57,7 @@ public class WinningConditions : MonoBehaviour
     //returns the count of the player who won. If no one has, return -1
     public virtual int hasMet(List<Player> players)
     {
-        if (this.turnsLeft == 0)
+        if (this.turnsHeld == this.TURNSNEEDED)
         {
             return this.controlsTiles(players);
         }
@@ -103,24 +103,24 @@ public class WinningConditions : MonoBehaviour
 
     //Changes the conditions based on the current circumstances
     //given the list of players
-    public virtual void updateStandings(List<Player> players) 
+    public virtual void updateStandings(List<Player> players, int currentPlayerIndex) 
     {
         int currentController = this.controlsTiles(players);
         if (currentController == -1)
         {
-            this.turnsLeft = this.TURNSNEEDED;
+            this.turnsHeld = 0;
             this.turnsDisplay.SetActive(false);
         }
         else if (currentController != this.winningPlayerIndex)
         {
-            this.turnsLeft = this.TURNSNEEDED;
+            this.turnsHeld = 0;
             this.winningPlayerIndex = currentController;
             this.turnsDisplay.SetActive(true);
         }
-        else 
+        else if(currentPlayerIndex == this.winningPlayerIndex)
         {
-            this.turnsLeft -= 1;
+            this.turnsHeld += 1;
         }
-        turnText.text = this.turnsLeft.ToString();
+        turnText.text = this.turnsHeld.ToString();
     }
 }

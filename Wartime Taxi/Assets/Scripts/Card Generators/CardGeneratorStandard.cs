@@ -21,7 +21,7 @@ public class CardGeneratorStandard : CardGenerator
             moveCard.setInputHandler(this.inputHandler);
             return moveCard;
         }
-        else if (num < 8) 
+        else if (num < 7) 
         { 
             splitCard.setInputHandler(this.inputHandler);
             return splitCard;

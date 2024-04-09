@@ -60,6 +60,7 @@ public class InputHandlerTutorial : InputHandler
     // Update is called once per frame
     void Update()
     {
+        this.tutorialText.changeConditions();
         if (actionsLeft == 0) { this.nextTurn(); }
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = 100;

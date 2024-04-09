@@ -58,12 +58,11 @@ public class FakeUnit : Unit
     {
         if (this.type == UnitType.Submarine && !this.opposingTeam(team))
         {
-            return this.team + " Fake " + this.type + "\n Health: " + this.health + " Max:" + this.MAXHEALTH;
-
+            return this.team + " Fake " + this.type;
         }
         else
         {
-            return this.team + " " + this.type + "\n Health: " + this.health + " Max:" + this.MAXHEALTH;
+            return this.team + " " + this.type + "\n Health: " + this.health + " / " + this.MAXHEALTH;
         }
     }
 
