@@ -22865,11 +22865,11 @@ MonoBehaviour:
   - {fileID: 1013018505}
   - {fileID: 214546638}
   unitPositions:
-  - {x: 2.5, y: 0, z: 0}
-  - {x: 2.5, y: 0, z: -2.5}
-  - {x: 2.5, y: 0, z: 5}
-  - {x: 2.5, y: 0, z: 2.5}
-  - {x: 2.5, y: 0, z: -5}
+  - {x: 5, y: 0, z: 5}
+  - {x: 5, y: 0, z: 10}
+  - {x: 0, y: 0, z: 5}
+  - {x: -5, y: 0, z: 10}
+  - {x: 5, y: 0, z: 0}
   units: []
   isLand: 0
   isAirBase: 0

@@ -14,11 +14,15 @@ public class AIStandard : AI
     Tile subarineHeatmapTile;
     [SerializeField]
     Tile dockyard;
+    Player currentPlayer;
+    Player opposingPlayer;
 
     //Given the attributes needed to make the values and move itself, returns whether the move required removing action points or not
     public override bool makeMove(Player currentPlayer, Player opposingPlayer,
-        UnitGenerator unitGenerator, GameObject cards, int maxCardCount) 
+        UnitGenerator unitGenerator, GameObject cards, int maxCardCount)
     {
+        this.currentPlayer = currentPlayer;
+        this.opposingPlayer = opposingPlayer;
         List<Action> list = currentPlayer.possibleActions(
             maxCardCount, cards, opposingPlayer, unitGenerator).OrderBy(x => Guid.NewGuid()).ToList();
 
@@ -88,6 +92,21 @@ public class AIStandard : AI
         }
         else
         {
+            if (this.opposingPlayer.getCount(UnitType.Airbase) > 0 && unit.sameType(UnitType.Cruiser)) 
+            {
+                foreach (Tile t in prioritizedTiles)
+                {
+                    if (!unit.sameTeam(t))
+                    {
+                        List<Tile> path = currentTile.findPath(t);
+                        if (path[0] == nextTile)
+                        {
+                            return 30 - path.Count;
+                        }
+                    }
+                }
+                return 5;
+            }
             if (!unit.canSurviveShot(1) && unit.MAXHEALTH > 1)
             {
                 List<Tile> path = currentTile.findPath(dockyard);

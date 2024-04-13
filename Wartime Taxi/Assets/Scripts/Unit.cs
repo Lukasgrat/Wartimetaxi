@@ -312,6 +312,7 @@ public class Unit : MonoBehaviour
         {
             return;
         }
+        Debug.Log(p.totalHealth(this.type));
         this.MAXHEALTH += p.totalHealth(this.type);
     }
 
