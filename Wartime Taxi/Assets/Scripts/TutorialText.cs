@@ -24,7 +24,9 @@ public class TutorialText : MonoBehaviour
     [SerializeField]
     GameObject pointingAtIsland;
     [SerializeField]
-    GameObject pointingAtMarine;
+    GameObject pointingAtRedMarine;
+    [SerializeField]
+    GameObject pointingAtGreenMarine;
     [SerializeField]
     Image pointingAtTypes;
     [SerializeField]
@@ -168,9 +170,10 @@ public class TutorialText : MonoBehaviour
         this.pointingAtDeck.gameObject.SetActive(state == 7);
         this.pointingAtCruiser.gameObject.SetActive(state == 8);
         this.pointingAtTypes.gameObject.SetActive(state == 9);
+        this.pointingAtGreenMarine.gameObject.SetActive(state == 20);
         this.pointingAtDestroyer.gameObject.SetActive(state == 21);
         this.pointingAtIsland.gameObject.SetActive(state == 22);
-        this.pointingAtMarine.gameObject.SetActive(state == 23);
+        this.pointingAtRedMarine.gameObject.SetActive(state == 23);
     }
 
     //returns what phase of the tutorial the player is in

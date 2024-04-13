@@ -6,7 +6,7 @@ public interface Action
 {
     void PlayMove();
 
-    int value(List<Tile> prioritizedTiles);
+    int value(AI ai);
 
     //returns if this action required an action point
     bool requiresAction();
@@ -27,9 +27,9 @@ class OrderAction : Action
         this.order.destroyCard(this.p);
     }
 
-    public int value(List<Tile> prioritizedTiles) 
+    public int value(AI ai) 
     {
-        return order.value(prioritizedTiles);
+        return order.value(ai);
     }
 
     public bool requiresAction() 
@@ -53,13 +53,9 @@ class Discard : Action
         this.p.removeCard(this.cardType);
     }
 
-    public int value(List<Tile> prioritizedTiles) 
+    public int value(AI ai) 
     {
-        if (this.p.canDrawCard(6)) 
-        {
-            return 0;
-        }
-        return 5;
+        return ai.determineDiscardValue(cardType, p);
     }
 
     public bool requiresAction()
@@ -83,18 +79,9 @@ class DrawCard : Action
         this.p.drawCard(this.parent);
     }
 
-    public int value(List<Tile> prioritizedTiles) 
+    public int value(AI ai) 
     {
-        if (this.p.canDrawCard(3))
-        {
-            return 20;
-        }
-        else if (this.p.getCount(CardType.Move) < 2 
-            && this.p.getCount(CardType.Shoot) < 2) 
-        {
-            return 15;
-        }
-        return 5;
+        return ai.determineDrawValue(this.p);
     }
 
     public bool requiresAction()

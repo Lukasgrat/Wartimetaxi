@@ -100,6 +100,19 @@ public class Player
         return count;
     }
 
+    //Returns the amoutn of units within this player's armada
+    public int getCount(UnitType ut)
+    {
+        int count = 0;
+        foreach (Unit unit in this.units)
+        {
+            if (unit.sameType(ut))
+            {
+                count += 1;
+            }
+        }
+        return count;
+    }
 
     //EFFECT: Removes the first instance of the given type of card within this person's hand
     // If none are found, does nothing

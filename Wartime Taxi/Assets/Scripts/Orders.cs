@@ -8,7 +8,7 @@ public interface Order
     bool isValid();
     void playCard();
 
-    int value(List<Tile> prioritizedTiles);
+    int value(AI ai);
 
     CardType getType();
 
@@ -51,40 +51,9 @@ class Move : Order {
         return CardType.Move;
     }
 
-    public int value(List<Tile> prioritizedTiles)
+    public int value(AI ai)
     {
-
-        if (this.unit.sameType(UnitType.Airbase)) 
-        {
-            return 1;
-        }
-        if (this.unit.sameType(UnitType.Marine))
-        {
-            Debug.Log(this.player);
-            Debug.Log(this.unit);
-            if (this.unit.canSurviveShot(2) && this.player.getCount(CardType.Split) > 0)
-            {
-                return 3;
-            }
-
-            foreach (Tile t in prioritizedTiles)
-            {
-                Debug.Log("there");
-                if (!this.unit.sameTeam(t))
-                {
-                    Debug.Log("here");
-                    List<Tile> path = this.currentTile.findPath(t);
-                    Debug.Log(path);
-                    if (path[0] == this.nextTile) 
-                    {
-                        return 20 - path.Count;
-                    }
-                }
-            }
-            return 8;
-        }
-
-        return 6;
+        return ai.determineMovementValue(this.currentTile, this.nextTile, this.unit, this.player);
     }
 
 
@@ -131,9 +100,9 @@ class Shoot : Order
         }
     }
 
-    public int value(List<Tile> prioritizedTiles)
+    public int value(AI ai)
     {
-        return 25;
+        return ai.determineShootValue(shooter, target);
     }
 
 
@@ -217,20 +186,9 @@ class Split : Order
         return unit.healthToSpare() >= this.splitHealth && this.currentTile.canMove(this.unit, this.nextTile);
     }
 
-    public int value(List<Tile> prioritizedTiles) 
+    public int value(AI ai) 
     {
-        if (!this.unit.canSurviveShot(2))
-        {
-            return 2;
-        }
-        else if (this.unit.sameType(UnitType.Marine) && splitHealth == 2)
-        {
-            return 15;
-        }
-        else 
-        {
-            return 5;
-        }
+        return ai.determineSplitValue(unit, this.currentTile, this.nextTile, this.p, this.splitHealth);
     }
 
 

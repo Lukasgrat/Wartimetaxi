@@ -21940,7 +21940,7 @@ GameObject:
   - component: {fileID: 1759363699}
   - component: {fileID: 1759363698}
   m_Layer: 0
-  m_Name: South West Green Sea
+  m_Name: Southwestern Green Sea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25003,11 +25003,11 @@ MonoBehaviour:
   - {fileID: 894646160}
   - {fileID: 21553401}
   unitPositions:
-  - {x: 0, y: 0, z: 0}
   - {x: -5, y: 0, z: 0}
   - {x: -1, y: 0, z: -3.5}
   - {x: -3.5, y: 0, z: -3.5}
   - {x: -3.5, y: 0, z: -3.5}
+  - {x: 0, y: 0, z: 0}
   units: []
   isLand: 0
   isAirBase: 0
@@ -25081,9 +25081,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prioritizedTiles:
+  - {fileID: 467855346}
   - {fileID: 894646160}
   - {fileID: 1013018505}
-  - {fileID: 467855346}
+  cruiserHeatmapTile: {fileID: 721294229}
+  subarineHeatmapTile: {fileID: 1759363698}
+  dockyard: {fileID: 1167328729}
 --- !u!4 &2142980158
 Transform:
   m_ObjectHideFlags: 0

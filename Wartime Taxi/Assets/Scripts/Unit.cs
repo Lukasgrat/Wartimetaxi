@@ -34,7 +34,7 @@ public class Unit : MonoBehaviour
     [SerializeField]
     internal int health = 4;
     [SerializeField]
-    internal int MAXHEALTH = 4;
+    public int MAXHEALTH { get; private set; } = 4;
     FakeUnit fake;
     internal bool hasFake = false;
 

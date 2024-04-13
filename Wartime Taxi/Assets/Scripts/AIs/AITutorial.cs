@@ -52,4 +52,10 @@ public class AITutorial : AI
         }
         return true;
     }
+
+    public override int determineDrawValue(Player p) { return 0; }
+    public override int determineDiscardValue(CardType cardType, Player p) { return 0; }
+    public override int determineMovementValue(Tile currentTile, Tile nextTile, Unit unit, Player player) { return 0; }
+    public override int determineShootValue(Unit shooter, Unit target) { return 0; }
+    public override int determineSplitValue(Unit unit, Tile currentTile, Tile nextTile, Player p, int splitHealth) { return 0; }
 }
