@@ -14,6 +14,10 @@ public class InputHandlerTutorial : InputHandler
 {
     [SerializeField]
     TutorialText tutorialText;
+    [SerializeField]
+    Tile disabledTile;
+    [SerializeField]
+    GameObject redLight;
     // Start is called before the first frame update
     void Start()
     {
@@ -61,11 +65,13 @@ public class InputHandlerTutorial : InputHandler
     void Update()
     {
         this.tutorialText.changeConditions();
-        if (actionsLeft == 0) { this.nextTurn(); }
+        if (actionsLeft == 0) {
+            this.nextTurn();
+        }
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = 100;
         mousePos = cam.ScreenToWorldPoint(mousePos);
-        if (!EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit[] hits = Physics.RaycastAll(ray, 100f);
@@ -74,6 +80,7 @@ public class InputHandlerTutorial : InputHandler
             {
                 if (hit.transform.gameObject.TryGetComponent(out Tile t) && t.isLighten())
                 {
+                    Debug.Log(t.gameObject.name);
                     hasLightenTile = true;
                     this.SelectionHandler(t);
                     return;
@@ -130,6 +137,45 @@ public class InputHandlerTutorial : InputHandler
                 player.drawCard(this.cards);
                 this.changeActions(this.actionsLeft - 1);
             }
+        }
+    }
+    
+    public override void unitSelected(UnitType ut)
+    {
+        if (this.currentState == State.SelectedTile1Move)
+        {
+            this.initiator = this.initiatedTile.returnUnit(ut);
+            this.clearLights();
+            this.initiatedTile.lightMoveable(this.initiator);
+            this.selectionHandler.disableButtons();
+            this.currentState = State.SelectedUnit1Move;
+            if (this.tutorialText.currentPhase() < 9 && this.disabledTile.isLighten())
+            {
+                this.disabledTile.lightTile(false);
+                redLight.SetActive(true);
+            }
+
+        }
+        else if (this.currentState == State.SelectedTile1Shoot)
+        {
+            this.initiator = this.initiatedTile.returnUnit(ut);
+            this.clearLights();
+            this.initiatedTile.lightShootable(this.initiator);
+            this.selectionHandler.disableButtons();
+            this.currentState = State.SelectedUnit1Shoot;
+        }
+        else if (this.currentState == State.SelectedTile2Shoot)
+        {
+            Order order = new Shoot(this.initiator, this.target.returnUnit(ut), this.opposingPlayer());
+            this.playOrder(order);
+        }
+        else if (this.currentState == State.SelectedTile1Split)
+        {
+            this.initiator = this.initiatedTile.returnUnit(ut);
+            this.clearLights();
+            this.initiatedTile.lightMoveable(this.initiator);
+            this.selectionHandler.disableButtons();
+            this.currentState = State.SelectedUnit1Split;
         }
     }
 
@@ -189,5 +235,15 @@ public class InputHandlerTutorial : InputHandler
                 t.lightTile(true);
             }
         }
+    }
+
+    public override void resetState() {
+        this.currentState = State.Idle;
+        this.selectedCard = CardType.None;
+        this.fakeButton.gameObject.SetActive(false);
+        this.clearLights();
+        this.selectionHandler.disableButtons();
+        this.numberSelector.thoroughDisable();
+        this.redLight.SetActive(false);
     }
 }

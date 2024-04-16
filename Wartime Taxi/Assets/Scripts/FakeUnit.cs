@@ -74,4 +74,10 @@ public class FakeUnit : Unit
         this.realUnit.removeFake();
         Object.Destroy(this.gameObject);
     }
+
+    //Returns the sum of the given maximum health and this unit's max health
+    public override int addMaxHealthTo(int max)
+    {
+        return max;
+    }
 }

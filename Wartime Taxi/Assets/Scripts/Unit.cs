@@ -90,6 +90,8 @@ public class Unit : MonoBehaviour
 
     public bool sameTeam(Tile t) { return t.sameTeam(this.team); }
 
+    public bool opposingTeam(Tile t) { return t.opposingTeam(this.team); }
+
 
     //returns if this unit is the given type
     public bool sameType(UnitType type) 
@@ -385,7 +387,7 @@ public class Unit : MonoBehaviour
 
 
     //Returns the sum of the given maximum health and this unit's max health
-    public int addMaxHealthTo(int max) 
+    public virtual int addMaxHealthTo(int max) 
     { 
         return this.MAXHEALTH + max;
     }
@@ -398,6 +400,12 @@ public class Unit : MonoBehaviour
         if (this.type != u.type) 
         {
             throw new Exception("Error: Attempted units to assimiliate are not of the same type");
+        }
+        if (!this.isReal()) 
+        {
+            u.assimilate(this);
+            Debug.Log("here");
+            return;
         }
         if (!u.isReal()) 
         {

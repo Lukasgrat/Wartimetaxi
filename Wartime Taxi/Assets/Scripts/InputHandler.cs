@@ -326,7 +326,7 @@ public class InputHandler : MonoBehaviour
     }
 
     //EFFECT: Resets the built up state from a move
-    public void resetState()
+    public virtual void resetState()
     {
         this.currentState = State.Idle;
         this.selectedCard = CardType.None;
@@ -392,7 +392,7 @@ public class InputHandler : MonoBehaviour
     }
 
     //Given a unit, finds that unit to be used for later operations and advance the state with that unit added
-    public void unitSelected(UnitType ut) 
+    public virtual void unitSelected(UnitType ut) 
     {
         if (this.currentState == State.SelectedTile1Move)
         {

@@ -34,8 +34,6 @@ public class TutorialText : MonoBehaviour
     [SerializeField]
     GameObject pointingAtUnit;
     [SerializeField]
-    Image pointingAtCruiser;
-    [SerializeField]
     GameObject pointingAtDeck;
     [SerializeField]
     GameObject pointingAtDestroyer;
@@ -168,7 +166,6 @@ public class TutorialText : MonoBehaviour
         this.pointingAtUnit.gameObject.SetActive(state == 1);
         this.pointingAtDraw.gameObject.SetActive(state == 5);
         this.pointingAtDeck.gameObject.SetActive(state == 7);
-        this.pointingAtCruiser.gameObject.SetActive(state == 8);
         this.pointingAtTypes.gameObject.SetActive(state == 9);
         this.pointingAtGreenMarine.gameObject.SetActive(state == 20);
         this.pointingAtDestroyer.gameObject.SetActive(state == 21);

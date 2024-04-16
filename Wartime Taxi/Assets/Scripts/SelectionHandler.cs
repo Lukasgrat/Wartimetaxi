@@ -33,6 +33,7 @@ public class SelectionHandler : MonoBehaviour
     public void enableButtons(List<Unit> units) 
     {
         this.disableButtons();
+        this.gameObject.SetActive(true);
         foreach (Unit unit in units) 
         {
             if (unit.sameType(UnitType.Marine))
@@ -57,12 +58,13 @@ public class SelectionHandler : MonoBehaviour
             }
         }
     }
-    public void disableButtons() 
+    public void disableButtons()
     {
         this.selectMarine.gameObject.SetActive(false);
         this.selectCruiser.gameObject.SetActive(false);
         this.selectDestroyer.gameObject.SetActive(false);
         this.selectAirfield.gameObject.SetActive(false);
         this.selectSubmarine.gameObject.SetActive(false);
+        this.gameObject.SetActive(false);
     }
 }

@@ -84,7 +84,7 @@ public class AIStandard : AI
                     List<Tile> path = currentTile.findPath(t);
                     if (path[0] == nextTile)
                     {
-                        return 20 - path.Count;
+                        return 25 - path.Count;
                     }
                 }
             }
@@ -92,21 +92,6 @@ public class AIStandard : AI
         }
         else
         {
-            if (this.opposingPlayer.getCount(UnitType.Airbase) > 0 && unit.sameType(UnitType.Cruiser)) 
-            {
-                foreach (Tile t in prioritizedTiles)
-                {
-                    if (!unit.sameTeam(t))
-                    {
-                        List<Tile> path = currentTile.findPath(t);
-                        if (path[0] == nextTile)
-                        {
-                            return 30 - path.Count;
-                        }
-                    }
-                }
-                return 5;
-            }
             if (!unit.canSurviveShot(1) && unit.MAXHEALTH > 1)
             {
                 List<Tile> path = currentTile.findPath(dockyard);
@@ -119,10 +104,23 @@ public class AIStandard : AI
             {
                 if (unit.sameType(UnitType.Cruiser))
                 {
-                    List<Tile> path = currentTile.findPath(this.cruiserHeatmapTile);
-                    if (path.Count > 0 && path[0] == nextTile && path.Count > 1)
+                    List<Tile> path;
+                    foreach (Tile t in prioritizedTiles)
                     {
-                        return 15;
+                        if (unit.opposingTeam(t))
+                        {
+                            path = currentTile.findPath(t);
+                            if (path[0] == nextTile)
+                            {
+                                return 30 - path.Count * 2;
+                            }
+                        }
+                    }
+
+                    path = currentTile.findPath(this.cruiserHeatmapTile);
+                    if (path.Count > 0 && path[0] == nextTile && path.Count > 2)
+                    {
+                        return 20;
                     }
                 }
                 else if (unit.sameType(UnitType.Submarine))
@@ -130,7 +128,7 @@ public class AIStandard : AI
                     List<Tile> path = currentTile.findPath(this.subarineHeatmapTile);
                     if (path.Count > 0 && path[0] == nextTile && path.Count > 2)
                     {
-                        return 12;
+                        return 20;
                     }
                 }
             }
@@ -138,7 +136,13 @@ public class AIStandard : AI
 
         return 4;
     }
-    public override int determineShootValue(Unit shooter, Unit target) { return 25; }
+    public override int determineShootValue(Unit shooter, Unit target) {
+        if (target.sameType(UnitType.Airbase)) 
+        {
+            return 35;
+        }
+        return 25;
+    }
 
     public override int determineSplitValue(Unit unit, Tile currentTile, Tile nextTile, Player p, int splitHealth) 
     { 
