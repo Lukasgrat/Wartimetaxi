@@ -19108,7 +19108,7 @@ MonoBehaviour:
     their first split is a fake unit.
   - Like a real unit, they can block an enemy player's movement onto the tile they
     are on.  However, if they or any real submarine gets shot, they are found out
-    and self-destruct.
+    and sink.
   - Make a fake and send it somewhere on the map.
   - That'll hopefully keep them off their feet. Let's start on what could give us
     some leverage on his units and force a surrender.
