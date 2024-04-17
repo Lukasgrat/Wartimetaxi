@@ -540,6 +540,7 @@ public class InputHandler : MonoBehaviour
         {
             if (this.ai.makeMove(this.currentPlayer(), this.opposingPlayer(), unitGenerator, this.cards, this.MAXCARDCOUNT))
             { 
+                this.currentPlayer().consolidate();
                 this.changeActions(this.actionsLeft - 1);
             }
         }

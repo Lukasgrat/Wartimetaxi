@@ -8543,7 +8543,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   adjacentTiles:
   - {fileID: 151948041}
-  - {fileID: 21553401}
+  - {fileID: 2054671845}
   - {fileID: 1302204881}
   - {fileID: 808815126}
   unitPositions:
@@ -17196,7 +17196,7 @@ MonoBehaviour:
   adjacentTiles:
   - {fileID: 936360192}
   - {fileID: 625818346}
-  - {fileID: 2054671845}
+  - {fileID: 21553401}
   - {fileID: 808815126}
   unitPositions:
   - {x: 0, y: 0, z: 0}
@@ -23786,13 +23786,13 @@ Transform:
   - {fileID: 1655581336}
   - {fileID: 981138621}
   - {fileID: 469794583}
+  - {fileID: 2054671847}
   - {fileID: 1852288629}
   - {fileID: 1013018504}
   - {fileID: 1662824138}
   - {fileID: 2070844696}
   - {fileID: 936360194}
   - {fileID: 151948043}
-  - {fileID: 2054671847}
   - {fileID: 1302204883}
   - {fileID: 625818348}
   - {fileID: 808815128}
@@ -25136,7 +25136,7 @@ MonoBehaviour:
   adjacentTiles:
   - {fileID: 151948041}
   - {fileID: 894646160}
-  - {fileID: 21553401}
+  - {fileID: 2054671845}
   unitPositions:
   - {x: -5, y: 0, z: 0}
   - {x: -1, y: 0, z: -3.5}
