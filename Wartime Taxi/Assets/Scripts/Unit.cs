@@ -266,7 +266,7 @@ public class Unit : MonoBehaviour
         }
     }
 
-    //Removes u from its given locaton
+    //Removes u from its locaton
     public void removeLocation() 
     { 
         this.location.removeUnit(this);
@@ -314,7 +314,6 @@ public class Unit : MonoBehaviour
         {
             return;
         }
-        Debug.Log(p.totalHealth(this.type));
         this.MAXHEALTH += p.totalHealth(this.type);
     }
 

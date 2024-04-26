@@ -23,7 +23,7 @@ public class AirFieldGenerator : MonoBehaviour
     }
 
     //Generates an airfield of the given type on the given parent
-    public void generateAirField(Team team, GameObject parent) 
+    public GameObject generateAirField(Team team, GameObject parent) 
     {
         GameObject newAirfield;
         if (team == Team.Neutral)
@@ -43,10 +43,11 @@ public class AirFieldGenerator : MonoBehaviour
             throw new System.Exception("Error: Team " + team + " not accounted for");
         }
 
-        Object.Instantiate(newAirfield,
+        return Object.Instantiate(newAirfield,
         new Vector3(parent.transform.position.x,
         parent.transform.position.y,
         parent.transform.position.z),
         parent.transform.rotation, parent.transform);
+
     }
 }

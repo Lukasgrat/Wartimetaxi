@@ -57,11 +57,6 @@ public class AIStandard : AI
 
     public override int determineMovementValue(Tile currentTile, Tile nextTile, Unit unit, Player player) 
     {
-
-        if (unit.sameType(UnitType.Airbase))
-        {
-            return 1;
-        }
         if (unit.sameType(UnitType.Marine))
         {
             if (player.getCount(UnitType.Marine) + player.getCount(UnitType.Airbase) == 1 && !unit.canSurviveShot(3))
@@ -97,7 +92,7 @@ public class AIStandard : AI
                 List<Tile> path = currentTile.findPath(dockyard);
                 if (path.Count > 0 && path[0] == nextTile)
                 {
-                    return 25;
+                    return 30;
                 }
             }
             else 
@@ -112,7 +107,7 @@ public class AIStandard : AI
                             path = currentTile.findPath(t);
                             if (path[0] == nextTile)
                             {
-                                return 30 - path.Count * 2;
+                                return 30 - path.Count;
                             }
                         }
                     }
@@ -128,7 +123,7 @@ public class AIStandard : AI
                     List<Tile> path = currentTile.findPath(this.subarineHeatmapTile);
                     if (path.Count > 0 && path[0] == nextTile && path.Count > 2)
                     {
-                        return 20;
+                        return 15;
                     }
                 }
             }
@@ -152,7 +147,11 @@ public class AIStandard : AI
         }
         else if (unit.sameType(UnitType.Marine) && splitHealth == 2)
         {
-            return 15;
+            return 13;
+        }
+        else if (unit.sameType(UnitType.Airbase))
+        {
+            return 26;
         }
         else
         {

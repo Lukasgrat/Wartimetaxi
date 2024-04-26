@@ -24,6 +24,8 @@ public class Tile : MonoBehaviour
     bool isLit = false;
     [SerializeField]
     AirFieldGenerator airFieldGenerator;
+    [SerializeField]
+    GameObject airBase;
     // Start is called before the first frame update
     void Start()
     {
@@ -392,24 +394,13 @@ public class Tile : MonoBehaviour
         {
             if (transform.GetChild(i).name.Equals("Airfield"))
             {
-                List<String> airfieldNames = new List<String>();
-                airfieldNames.Add("AirField-Green");
-                airfieldNames.Add("AirField-Red");
-                airfieldNames.Add("AirField-Neutral");
                 airfield = transform.GetChild(i).gameObject;
-                for (int index = 0; index < airfield.transform.childCount; index += 1) 
-                {
-                    if (airfieldNames.Contains(airfield.transform.GetChild(index).name)) 
-                    {
-                        Destroy(airfield.transform.GetChild(index).gameObject);
-                    }
-                }
             }
         }
         if (airfield != null)
         {
-            this.airFieldGenerator.generateAirField(this.team, airfield);
-            return;
+            Destroy(this.airBase);
+            this.airBase = this.airFieldGenerator.generateAirField(this.team, airfield);
         }
         else
         {
@@ -425,18 +416,17 @@ public class Tile : MonoBehaviour
         {
             throw new Exception("Negative range given to tile");
         }
-        else if (n == 0)
+        bool returnBool = t == this;
+        if (n > 0) 
         {
-            return t == this;
-        }
-        else if (n == 1)
-        {
-            return this.adjacentTiles.Contains(t);
-        }
-        bool returnBool = false;
-        foreach (Tile tile in this.adjacentTiles) 
-        {
-            returnBool = returnBool || tile.inRange(n - 1, t);
+            foreach (Tile tile in this.adjacentTiles)
+            {
+                returnBool = returnBool || tile.inRange(n - 1, t);
+                if (returnBool)
+                {
+                    return true;
+                }
+            }
         }
         return returnBool;
     }
